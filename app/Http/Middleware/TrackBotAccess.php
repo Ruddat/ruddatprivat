@@ -20,6 +20,7 @@ class TrackBotAccess
             'Plesk screenshot bot https://support.plesk.com/hc/en-us/articles/10301006946066',
             'AnotherBot/1.0',
             'CustomBotName',
+            'TurnitinBot (https://turnitin.com/robot/crawlerinfo.html)', // Neuer Bot hinzugefügt
         ];
 
         // User-Agent-Header abfragen
