@@ -7,7 +7,7 @@
 
             <!-- Bild -->
             <div class="col-lg-6 position-relative align-self-start order-lg-last order-first" data-aos="fade-up" data-aos-delay="200">
-                <img src="assets/images/about.webp" class="img-fluid" alt="Über Ingo Ruddat">
+                <img src="assets/images/about2.webp" class="img-fluid" alt="Über Ingo Ruddat">
             </div>
 
             <!-- Textinhalt -->

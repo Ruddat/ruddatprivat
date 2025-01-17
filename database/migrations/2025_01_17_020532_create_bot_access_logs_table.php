@@ -16,6 +16,11 @@ return new class extends Migration
             $table->string('bot_name');
             $table->string('ip_address');
             $table->text('url');
+            $table->string('device')->nullable();
+            $table->string('platform')->nullable();
+            $table->string('platform_version')->nullable();
+            $table->string('browser')->nullable();
+            $table->string('browser_version')->nullable();
             $table->timestamp('accessed_at');
             $table->timestamps();
         });

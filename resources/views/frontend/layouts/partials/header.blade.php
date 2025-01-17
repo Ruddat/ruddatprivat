@@ -17,8 +17,8 @@
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
-      <a class="btn-getstarted" href="{{ url('/schedule-appointment') }}">Jetzt Startem</a>
+      <a class="btn-getstarted" href="{{ url('/schedule-appointment') }}">Jetzt Starten</a>
 
     </div>
-    
+
   </header>
