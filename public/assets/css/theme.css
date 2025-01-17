@@ -1,0 +1,51 @@
+/* Hintergrund für den Body */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)),
+                      url('https://cdn.b12.io/client_media/d96mZDEl/edaba1aa-c0a9-11ef-b654-0242ac110002-jpg-hero_image.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Text und Button-Styling */
+.hero-content {
+    text-align: center;
+    z-index: 2;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.hero-content .btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content .btn-primary:hover {
+    background-color: #0056b3;
+}

@@ -1,0 +1,37 @@
+/*  ----------------------------------------------------------------
+    CSS für die Website Ingo Ruddat
+    ----------------------------------------------------------------
+*/
+
+/* get-in-touch Styles */
+#accent-background {
+    padding: 60px 0;
+    background-color: #28a745; /* Grüner Hintergrund */
+    color: white;
+}
+
+#accent-background .btn-outline-light {
+    transition: all 0.3s ease-in-out;
+}
+
+#accent-background .btn-outline-light:hover {
+    background-color: white;
+    color: #28a745;
+}
+
+.text-white {
+    font-weight: 900;
+    font-size: xxx-large;
+}
+
+@media (max-width: 991.98px) {
+    #kontakt .d-flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #kontakt a {
+        margin-top: 15px;
+    }
+}
+
