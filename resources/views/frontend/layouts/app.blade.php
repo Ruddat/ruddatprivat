@@ -8,6 +8,7 @@
     <meta name="keywords" content="">
 
     @include('frontend.layouts.partials.head')
+    @cookieconsentscripts
 
 </head>
 <body class="index-page">
@@ -33,6 +34,6 @@
     @include('frontend.layouts.partials.footer')
     <!-- Vendor JS Files -->
     @include('frontend.layouts.partials.footer-script')
-
+    @cookieconsentview
 </body>
 </html>

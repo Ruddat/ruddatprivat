@@ -99,7 +99,7 @@
             <h3 class="mt-4">Kontakt</h3>
             <p>Für Fragen oder weitere Informationen stehen wir Ihnen gerne zur Verfügung:</p>
             <p>
-                <strong>E-Mail:</strong> <a href="mailto:fbp89262@kisoq.com">fbp89262@kisoq.com</a><br>
+                <strong>E-Mail:</strong> <a href="mailto:service@ruddattech.de">service@ruddattech.de</a><br>
             </p>
         </div>
     </div>

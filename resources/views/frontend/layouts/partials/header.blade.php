@@ -20,4 +20,5 @@
       <a class="btn-getstarted" href="{{ url('/schedule-appointment') }}">Jetzt Startem</a>
 
     </div>
+    
   </header>

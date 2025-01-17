@@ -8,7 +8,7 @@
                 <div>
                     <h2 class="text-white mb-3" data-aos="fade-down" data-aos-delay="200">LASS UNS REDEN</h2>
                     <p class="text-light mb-0" data-aos="fade-down" data-aos-delay="300">
-                        Wir freuen uns, von Ihnen zu hören!
+                        Ich freue mich, von Ihnen zu hören!
                     </p>
                 </div>
                 <!-- Button -->

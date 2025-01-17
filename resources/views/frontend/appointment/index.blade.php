@@ -9,8 +9,15 @@
     <div class="container sb-container-fixed sb-container">
 
         <div class="row align-items-center">
-            <!-- Text links -->
-            <div class="col-lg-6" data-aos="fade-right" data-aos-offset="120" data-aos-duration="400">
+            <!-- Bild oben auf kleinen Bildschirmen -->
+            <div class="col-lg-6 order-1 order-lg-2" data-aos="fade-left" data-aos-offset="120" data-aos-duration="400">
+                <figure>
+                    <img src="assets/images/interaktiv-ux.webp" alt="Interaktive Benutzeroberflächen" class="img-fluid rounded shadow">
+                </figure>
+            </div>
+
+            <!-- Text unten auf kleinen Bildschirmen -->
+            <div class="col-lg-6 order-2 order-lg-1" data-aos="fade-right" data-aos-offset="120" data-aos-duration="400">
                 <h2 class="mb-3">Interaktive Benutzeroberflächen</h2>
                 <p class="mb-4">
                     Verbessern Sie die Benutzererfahrung mit interaktiven Benutzeroberflächen, die Ihr Publikum fesseln und begeistern.
@@ -24,13 +31,6 @@
                 </p>
                 <a href="{{ url('/intake-form') }}" class="btn btn-success">Termin vereinbaren</a>
             </div>
-
-            <!-- Bild rechts -->
-            <div class="col-lg-6" data-aos="fade-left" data-aos-offset="120" data-aos-duration="400">
-                <figure>
-                    <img src="assets/images/interaktiv-ux.webp" alt="Interaktive Benutzeroberflächen" class="img-fluid rounded shadow">
-                </figure>
-            </div>
         </div>
 
     </div>
@@ -39,12 +39,10 @@
 
 @include('frontend.appointment.sections.get-in-touch')
 
-
 <style>
     .section-space-to-header {
-    margin-top: 150px; /* Abstand zum Header */
-}
+        margin-top: 150px; /* Abstand zum Header */
+    }
 </style>
-
 
 @endsection

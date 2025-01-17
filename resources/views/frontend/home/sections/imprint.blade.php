@@ -19,9 +19,8 @@
         <div class="card shadow-sm p-4">
             <h3 class="mb-3">Angaben gemäß § 5 TMG</h3>
             <p><strong>Ingo Ruddat</strong><br>
-                Lehrte, Niedersachsen, Deutschland<br>
-                <strong>E-Mail:</strong> <a href="mailto:fbp89262@kisoq.com">fbp89262@kisoq.com</a><br>
-                <strong>Telefon:</strong> <a href="tel:+49123456789">+49 123 456789</a>
+                Braunschweig, Niedersachsen, Deutschland<br>
+                <strong>E-Mail:</strong> <a href="mailto:service@ruddattech.de">service@ruddattech.de</a><br>
             </p>
 
             <h3 class="mt-4">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>

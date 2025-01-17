@@ -42,7 +42,7 @@ class SchedulingFormComponent extends Component
     public function generateTimeSlots()
     {
         $this->timeSlots = [];
-        $start = Carbon::createFromTime(8, 0); // Startzeit 08:00
+        $start = Carbon::createFromTime(10, 0); // Startzeit 08:00
         $end = Carbon::createFromTime(20, 0); // Endzeit 20:00
         $now = Carbon::now(); // Aktuelle Zeit
 
@@ -191,7 +191,7 @@ class SchedulingFormComponent extends Component
     {
         return redirect('/'); // Leitet zur Startseite weiter
     }
-    
+
 
     public function render()
     {

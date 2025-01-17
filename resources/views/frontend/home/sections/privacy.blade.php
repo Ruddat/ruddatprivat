@@ -26,8 +26,7 @@
             <p>
                 Verantwortlich für die Verarbeitung Ihrer personenbezogenen Daten ist:<br>
                 <strong>Ingo Ruddat</strong><br>
-                <strong>E-Mail:</strong> <a href="mailto:fbp89262@kisoq.com">fbp89262@kisoq.com</a><br>
-                <strong>Telefon:</strong> <a href="tel:+49123456789">+49 123 456789</a>
+                <strong>E-Mail:</strong> <a href="mailto:service@ruddattech.de">service@ruddattech.de</a><br>
             </p>
 
             <h3 class="mt-4">3. Erhebung und Speicherung personenbezogener Daten</h3>
@@ -110,8 +109,7 @@
             <h3 class="mt-4">Kontakt</h3>
             <p>Für weitere Fragen stehen wir Ihnen gerne zur Verfügung:</p>
             <p>
-                <strong>E-Mail:</strong> <a href="mailto:fbp89262@kisoq.com">fbp89262@kisoq.com</a><br>
-                <strong>Telefon:</strong> <a href="tel:+49123456789">+49 123 456789</a>
+                <strong>E-Mail:</strong> <a href="mailto:service@ruddattech.de">service@ruddattech.de</a><br>
             </p>
         </div>
     </div>
