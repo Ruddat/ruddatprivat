@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('bot_access_logs', function (Blueprint $table) {
             $table->id();
             $table->string('bot_name');
-            $table->string('ip_address');
-            $table->text('url');
+            $table->text('user_agent');
+            $table->ipAddress('ip_address');
+            $table->string('url');
             $table->string('device')->nullable();
             $table->string('platform')->nullable();
             $table->string('platform_version')->nullable();

@@ -15,13 +15,12 @@ class TrackBotAccess
      */
     public function handle($request, Closure $next)
     {
-        // Liste der zu überwachenden Bots
-        $trackedBots = [
-            'Plesk screenshot bot https://support.plesk.com/hc/en-us/articles/10301006946066',
-            'AnotherBot/1.0',
-            'CustomBotName',
-            'TurnitinBot (https://turnitin.com/robot/crawlerinfo.html)', // Neuer Bot hinzugefügt
-        ];
+        // Liste der Bots aus der Config laden
+        $trackedBots = config('bots.tracked_bots', [
+            'Googlebot', // Beispiel: Googlebot als Teilstring erkennen
+            'TurnitinBot',
+            'Plesk screenshot bot',
+        ]);
 
         // User-Agent-Header abfragen
         $userAgent = $request->header('User-Agent');
@@ -32,27 +31,31 @@ class TrackBotAccess
         $agent->setUserAgent($userAgent);
 
         // Gerätedetails extrahieren
-        $device = $agent->device(); // Gerätetyp (z. B. iPhone)
-        $platform = $agent->platform(); // Betriebssystem (z. B. iOS)
-        $platformVersion = $agent->version($platform); // OS-Version (z. B. 18.2.1)
-        $browser = $agent->browser(); // Browser (z. B. Safari, Chrome)
-        $browserVersion = $agent->version($browser); // Browser-Version
+        $device = $agent->device();
+        $platform = $agent->platform();
+        $platformVersion = $agent->version($platform);
+        $browser = $agent->browser();
+        $browserVersion = $agent->version($browser);
 
-        // Prüfen, ob der User-Agent zu den überwachten Bots gehört
-        if (in_array($userAgent, $trackedBots)) {
-            BotAccessLog::create([
-                'bot_name' => $userAgent, // User-Agent als Bot-Name speichern
-                'ip_address' => $request->ip(),
-                'url' => $request->fullUrl(),
-                'device' => $device, // Neues Feld für Gerät
-                'platform' => $platform, // Neues Feld für OS
-                'platform_version' => $platformVersion, // Neues Feld für OS-Version
-                'browser' => $browser, // Neues Feld für Browser
-                'browser_version' => $browserVersion, // Neues Feld für Browser-Version
-                'accessed_at' => now(),
-            ]);
+        // Prüfen, ob der User-Agent einem bekannten Bot entspricht
+        foreach ($trackedBots as $botName) {
+            if (stripos($userAgent, $botName) !== false) {
+                BotAccessLog::create([
+                    'bot_name' => $botName,
+                    'user_agent' => $userAgent, // Ganzes User-Agent speichern
+                    'ip_address' => $request->ip(),
+                    'url' => $request->fullUrl(),
+                    'device' => $device,
+                    'platform' => $platform,
+                    'platform_version' => $platformVersion,
+                    'browser' => $browser,
+                    'browser_version' => $browserVersion,
+                    'accessed_at' => now(),
+                ]);
 
-            Log::info("Bot-Zugriff protokolliert: {$userAgent}");
+                Log::info("Bot-Zugriff protokolliert: {$botName}");
+                break;
+            }
         }
 
         return $next($request);
