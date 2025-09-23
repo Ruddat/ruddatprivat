@@ -40,7 +40,7 @@ public $cta_link;
 
 protected $rules = [
     'title' => 'required|string|max:255',
-    'category' => 'required|in:all,app,product,branding,books',
+    'category' => 'required|in:all,app,product,branding,books,web,kundenprojekt,marketplace,travel',
     'summary' => 'nullable|string|max:500',
     'description' => 'nullable|string',
     'badges' => 'nullable|array',
@@ -84,16 +84,17 @@ $item = PortfolioItem::updateOrCreate(
     ],
 );
 
-        // Galerie speichern
-        if ($this->newGallery) {
-            foreach ($this->newGallery as $image) {
-                $path = $image->store('portfolio/gallery', 'public');
-                PortfolioImage::create([
-                    'portfolio_item_id' => $item->id,
-                    'path' => $path,
-                ]);
-            }
-        }
+// Galerie speichern – nur neue Bilder
+if (!empty($this->newGallery)) {
+    foreach ($this->newGallery as $image) {
+        $path = $image->store('portfolio/gallery', 'public');
+        PortfolioImage::create([
+            'portfolio_item_id' => $item->id,
+            'path' => $path,
+        ]);
+    }
+    $this->newGallery = []; // nach dem Speichern zurücksetzen
+}
 
         // Nur resetten, wenn ein neues Item angelegt wurde
         if (! $this->itemId) {
@@ -147,6 +148,32 @@ $item = PortfolioItem::updateOrCreate(
         $item->update(['cover_image' => null]);
         $this->coverImage = null;
     }
+
+
+public function deleteItem($id)
+{
+    $item = PortfolioItem::with('images')->findOrFail($id);
+
+    // Cover löschen
+    if ($item->cover_image && Storage::disk('public')->exists($item->cover_image)) {
+        Storage::disk('public')->delete($item->cover_image);
+    }
+
+    // Galerie löschen
+    foreach ($item->images as $image) {
+        if ($image->path && Storage::disk('public')->exists($image->path)) {
+            Storage::disk('public')->delete($image->path);
+        }
+        $image->delete();
+    }
+
+    // Item löschen
+    $item->delete();
+
+    // Items neu laden
+    $this->loadItems();
+}
+
 
     private function resetForm()
     {

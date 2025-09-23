@@ -108,23 +108,26 @@
     <!-- Liste -->
     <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach ($items as $item)
-            <div class="card bg-base-100 shadow-lg">
-                <figure>
-                    <img src="{{ Storage::url($item->cover_image) }}"
-                        class="h-40 w-full object-cover">
-                </figure>
-                <div class="card-body">
-                    <h3 class="card-title">{{ $item->title }}</h3>
-                    <p class="text-sm">{{ $item->summary }}</p>
-                    <div class="flex gap-2 flex-wrap mt-2">
-                        @foreach ($item->badges ?? [] as $badge)
-                            <span class="badge badge-outline">{{ $badge }}</span>
-                        @endforeach
-                    </div>
-                    <button wire:click="edit({{ $item->id }})"
-                        class="btn btn-sm mt-4">Bearbeiten</button>
-                </div>
-            </div>
+<div class="card bg-base-100 shadow-lg">
+    <figure>
+        <img src="{{ Storage::url($item->cover_image) }}" class="h-40 w-full object-cover">
+    </figure>
+    <div class="card-body">
+        <h3 class="card-title">{{ $item->title }}</h3>
+        <p class="text-sm">{{ $item->summary }}</p>
+        <div class="flex gap-2 flex-wrap mt-2">
+            @foreach ($item->badges ?? [] as $badge)
+                <span class="badge badge-outline">{{ $badge }}</span>
+            @endforeach
+        </div>
+        <div class="flex gap-2 mt-4">
+            <button wire:click="edit({{ $item->id }})" class="btn btn-sm">Bearbeiten</button>
+            <button wire:click="deleteItem({{ $item->id }})" 
+                    onclick="return confirm('Wirklich löschen?')" 
+                    class="btn btn-sm btn-error">Löschen</button>
+        </div>
+    </div>
+</div>
         @endforeach
     </div>
 </div>
