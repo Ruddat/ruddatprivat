@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend\auth;
+namespace App\Http\Controllers\Backend\Auth;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
