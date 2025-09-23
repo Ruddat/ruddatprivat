@@ -7,7 +7,6 @@ use App\Http\Controllers\Backend\auth\CustomerOnboardingController;
 
 
 
-
     Route::get('/admin/impersonate/stop', [ImpersonateController::class, 'stop'])
         ->name('impersonate.stop');
 
