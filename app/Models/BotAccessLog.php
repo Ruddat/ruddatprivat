@@ -55,7 +55,7 @@ class BotAccessLog extends Model
      * Suchfilter für die Logs (Beispiel).
      *
      * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @param  string $botName
+     * @param  string                                $botName
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeFilterByBotName($query, $botName)

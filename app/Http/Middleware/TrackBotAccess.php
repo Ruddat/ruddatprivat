@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use App\Models\BotAccessLog;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Jenssegers\Agent\Agent;
@@ -27,7 +27,7 @@ class TrackBotAccess
         Log::info("User-Agent: {$userAgent}");
 
         // Jenssegers Agent initialisieren
-        $agent = new Agent();
+        $agent = new Agent;
         $agent->setUserAgent($userAgent);
 
         // Gerätedetails extrahieren

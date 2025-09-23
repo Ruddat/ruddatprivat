@@ -2,14 +2,22 @@
 
 namespace App\Livewire\Frontend\ContactForm;
 
-use Livewire\Component;
 use App\Models\ContactMessage;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
+use Livewire\Component;
 
 class ContactFormComponent extends Component
 {
-    public $name, $email, $subject, $message, $dataConsent;
+    public $name;
+
+    public $email;
+
+    public $subject;
+
+    public $message;
+
+    public $dataConsent;
 
     protected $rules = [
         'name' => 'required|string|max:255',
@@ -23,7 +31,7 @@ class ContactFormComponent extends Component
     {
         $this->validate();
 
-        //dd($this->name, $this->email, $this->subject, $this->message, $this->dataConsent);
+        // dd($this->name, $this->email, $this->subject, $this->message, $this->dataConsent);
 
         // Speichern in der Datenbank
         $contactMessage = ContactMessage::create([

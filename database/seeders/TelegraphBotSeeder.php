@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use DefStudio\Telegraph\Models\TelegraphBot;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class TelegraphBotSeeder extends Seeder
 {
@@ -24,7 +23,7 @@ class TelegraphBotSeeder extends Seeder
         // Prüfen, ob der Bot bereits existiert
         $bot = TelegraphBot::where('token', $botData['token'])->first();
 
-        if (!$bot) {
+        if (! $bot) {
             // Bot erstellen
             TelegraphBot::create($botData);
 
@@ -34,4 +33,3 @@ class TelegraphBotSeeder extends Seeder
         }
     }
 }
-

@@ -51,12 +51,12 @@ return [
 
         /**
          * secret token to be sent in a X-Telegram-Bot-Api-Secret-Token header
-         * to verify the authenticity of the webhook
+         * to verify the authenticity of the webhook.
          */
         'secret' => env('TELEGRAPH_WEBHOOK_SECRET'),
 
         /**
-         * maximum allowed simultaneous connections to the webhook (defaults to 40)
+         * maximum allowed simultaneous connections to the webhook (defaults to 40).
          */
         'max_connections' => env('TELEGRAPH_WEBHOOK_MAX_CONNECTIONS', 40),
 
@@ -118,7 +118,7 @@ return [
 
     'storage' => [
         /**
-         * Default storage driver to be used for Telegraph data
+         * Default storage driver to be used for Telegraph data.
          */
         'default' => 'file',
 
@@ -126,7 +126,7 @@ return [
             'file' => [
                 /**
                  * Telegraph cache driver to be used, must implement
-                 * DefStudio\Telegraph\Contracts\StorageDriver contract
+                 * DefStudio\Telegraph\Contracts\StorageDriver contract.
                  */
                 'driver' => \DefStudio\Telegraph\Storage\FileStorageDriver::class,
 
@@ -137,14 +137,14 @@ return [
                 'disk' => 'local',
 
                 /**
-                 * Folder inside filesystem to be used as root for Telegraph storage
+                 * Folder inside filesystem to be used as root for Telegraph storage.
                  */
                 'root' => 'telegraph',
             ],
             'cache' => [
                 /**
                  * Telegraph cache driver to be used, must implement
-                 * DefStudio\Telegraph\Contracts\StorageDriver contract
+                 * DefStudio\Telegraph\Contracts\StorageDriver contract.
                  */
                 'driver' => \DefStudio\Telegraph\Storage\CacheStorageDriver::class,
 
@@ -165,7 +165,7 @@ return [
     /**
      * Attachment validation rules, Telegram bot API defaults are set
      * can be changed to match higher limits when using a local bot
-     * API server (ref. https://core.telegram.org/bots/api#using-a-local-bot-api-server)
+     * API server (ref. https://core.telegram.org/bots/api#using-a-local-bot-api-server).
      */
     'attachments' => [
         'thumbnail' => [

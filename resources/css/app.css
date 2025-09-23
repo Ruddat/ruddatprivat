@@ -1,3 +1,92 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  /* ----------------------------
+     Form Fields
+  -----------------------------*/
+  .form-input {
+    @apply mt-1 block w-full rounded-lg border border-gray-300 bg-white
+           px-3 py-2 text-gray-900 placeholder-gray-400 shadow-sm
+           focus:border-pink-500 focus:ring-pink-500 sm:text-sm;
+  }
+
+  .form-select {
+    @apply mt-1 block w-full rounded-lg border border-gray-300 bg-white
+           px-3 py-2 text-gray-900 shadow-sm
+           focus:border-pink-500 focus:ring-pink-500 sm:text-sm;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-700;
+  }
+
+  /* ----------------------------
+     Portfolio Card System
+  -----------------------------*/
+  .portfolio-card {
+    @apply bg-white rounded-xl shadow-md hover:shadow-xl transition 
+           overflow-hidden flex flex-col;
+  }
+
+  .portfolio-image {
+    @apply w-full h-48 object-cover;
+  }
+
+  .portfolio-body {
+    @apply p-5 flex flex-col flex-grow;
+  }
+
+  .portfolio-title {
+    @apply text-lg font-semibold text-gray-900 mb-1;
+  }
+
+  .portfolio-summary {
+    @apply text-sm text-gray-600 line-clamp-2 flex-grow;
+  }
+
+  .portfolio-badge {
+    @apply px-2 py-0.5 text-[11px] leading-tight rounded-md 
+           font-medium border;
+  }
+
+  /* ----------------------------
+     Badge Variants by Category
+  -----------------------------*/
+  .badge-all {
+    @apply portfolio-badge bg-pink-50 text-pink-600 border-pink-200;
+  }
+
+  .badge-app {
+    @apply portfolio-badge bg-blue-50 text-blue-600 border-blue-200;
+  }
+
+  .badge-product {
+    @apply portfolio-badge bg-purple-50 text-purple-600 border-purple-200;
+  }
+
+  .badge-branding {
+    @apply portfolio-badge bg-orange-50 text-orange-600 border-orange-200;
+  }
+
+  .badge-books {
+    @apply portfolio-badge bg-green-50 text-green-600 border-green-200;
+  }
+
+  /* ----------------------------
+     Buttons
+  -----------------------------*/
+  .portfolio-btn {
+    @apply inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium
+           rounded-md transition;
+  }
+
+  .portfolio-btn-primary {
+    @apply portfolio-btn bg-pink-600 text-white hover:bg-pink-700;
+  }
+
+  .portfolio-btn-secondary {
+    @apply portfolio-btn border border-pink-600 text-pink-600 hover:bg-pink-50;
+  }
+}

@@ -7,16 +7,35 @@ use Livewire\Component;
 
 class SchedulingFormComponent extends Component
 {
-    public $selectedDate, $selectedTime, $name, $email, $phone, $services = [], $message;
-    public $currentMonth, $currentYear;
+    public $selectedDate;
+
+    public $selectedTime;
+
+    public $name;
+
+    public $email;
+
+    public $phone;
+
+    public $services = [];
+
+    public $message;
+
+    public $currentMonth;
+
+    public $currentYear;
+
     public $daysInMonth = [];
+
     public $weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     public $currentStartDate;
-    public $daysToShow = 7; // Anzahl der angezeigten Tage
-    public $timeSlots = [];
-    public $isSubmitted = false;
 
+    public $daysToShow = 7; // Anzahl der angezeigten Tage
+
+    public $timeSlots = [];
+
+    public $isSubmitted = false;
 
     protected $rules = [
         'selectedDate' => 'required|date',
@@ -36,8 +55,6 @@ class SchedulingFormComponent extends Component
         $this->generateVisibleDays();
         $this->generateTimeSlots();
     }
-
-
 
     public function generateTimeSlots()
     {
@@ -61,9 +78,6 @@ class SchedulingFormComponent extends Component
             $start->addMinutes(30); // 30-Minuten-Intervalle
         }
     }
-
-
-
 
     public function changeDays($direction)
     {
@@ -158,8 +172,8 @@ class SchedulingFormComponent extends Component
 
         $this->isSubmitted = true; // Formular erfolgreich abgeschickt
 
-      //  session()->flash('success', 'Ihr Termin wurde erfolgreich angefragt.');
-      //  $this->reset();
+        //  session()->flash('success', 'Ihr Termin wurde erfolgreich angefragt.');
+        //  $this->reset();
     }
 
     private function sendToTelegram($details)
@@ -191,7 +205,6 @@ class SchedulingFormComponent extends Component
     {
         return redirect('/'); // Leitet zur Startseite weiter
     }
-
 
     public function render()
     {

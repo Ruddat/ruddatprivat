@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class TelegraphChatSeeder extends Seeder
 {
@@ -19,8 +18,9 @@ class TelegraphChatSeeder extends Seeder
         // Bot-ID oder Bot auswählen
         $bot = TelegraphBot::first();
 
-        if (!$bot) {
+        if (! $bot) {
             $this->command->error('Es wurde kein TelegraphBot gefunden. Bitte zuerst einen Bot erstellen.');
+
             return;
         }
 
@@ -34,7 +34,7 @@ class TelegraphChatSeeder extends Seeder
         // Prüfen, ob der Chat bereits existiert
         $chat = TelegraphChat::where('chat_id', $chatData['chat_id'])->first();
 
-        if (!$chat) {
+        if (! $chat) {
             // Chat erstellen
             TelegraphChat::create($chatData);
 

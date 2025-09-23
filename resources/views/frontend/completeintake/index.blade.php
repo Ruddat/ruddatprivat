@@ -1,10 +1,9 @@
-@extends('frontend.layouts.app')
+@extends("frontend.layouts.app")
 
-@section('title', 'Willkommen bei Ingo Ruddat')
+@section("title", "Willkommen bei Ingo Ruddat")
 
-@section('content')
+@section("content")
 
-<livewire:frontend.intake-form.intake-form-component />
+    <livewire:frontend.intake-form.intake-form-component />
 
 @endsection
-
