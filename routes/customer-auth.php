@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Auth\CustomerAuthController;
-use App\Http\Controllers\Backend\auth\CustomerRegisterController;
+use App\Http\Controllers\Backend\Auth\CustomerRegisterController;
+
+
 
 Route::get('/login', [CustomerAuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [CustomerAuthController::class, 'login'])->name('login.submit');
