@@ -16,7 +16,8 @@
         "livewire/livewire": "^3.5",
         "maatwebsite/excel": "^3.1",
         "telegram-bot/api": "^2.5",
-        "whitecube/laravel-cookie-consent": "^1.2"
+        "whitecube/laravel-cookie-consent": "^1.2",
+        "horstoeko/zugferd-laravel": "^1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -54,3 +54,22 @@ Route::get('utility-costs/tenants-payments', \App\Livewire\Backend\UtilityCosts\
 Route::get('utility-costs/tenants', \App\Livewire\Backend\UtilityCosts\TenantTable::class)->name('utility_costs.tenants');
 Route::get('utility-costs/utility-cost-recording', \App\Livewire\Backend\UtilityCosts\UtilityCostRecording::class)->name('utility_costs.utility_cost_recording');
 Route::get('utility-costs/utility-costs', \App\Livewire\Backend\UtilityCosts\UtilityCostTable::class)->name('utility_costs.utility_costs');
+
+
+// Rechnungen Routen
+//Route::get('e-invoice/invoice-creators', \App\Livewire\Backend\EInvoice\InvoiceCreatorsManager::class)->name('e_invoice.invoice_creators');
+
+Route::get('e-invoice/customer-manager', \App\Livewire\Backend\EInvoice\CustomerManager::class)->name('e_invoice.customer_manager');
+
+
+    Route::get('new_invoice/invoice-manager', \App\Livewire\Backend\EInvoice\InvoiceManager::class)->name('new_invoice.invoice_manager');
+
+    Route::get('new_invoice/pdf-manager', \App\Livewire\Backend\EInvoice\InvoicePdfManager::class)->name('new_invoice.pdf_manager');
+
+
+Route::get('e-invoice/invoice-headers', \App\Livewire\Backend\EInvoice\InvoiceHeaderManager::class)->name('e_invoice.invoice_headers');
+Route::get('e-invoice/invoice-recipients', \App\Livewire\Backend\EInvoice\InvoiceRecipientsManager::class)->name('e_invoice.invoice_recipients');
+
+
+
+Route::get('e-invoice/manage-invoice-recipients', \App\Livewire\Backend\EInvoice\ManageInvoiceRecipients::class)->name('e_invoice.manage_invoice_recipients');

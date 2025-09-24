@@ -91,30 +91,41 @@
                     </div>
                 </div>
 
-                {{-- Rechnungen (Collapsible) --}}
-                <div x-data="{ open: false }" class="space-y-1">
-                    <button @click="open = !open"
-                        class="flex justify-between w-full px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
-                        <span>Meine Rechnungen</span>
-                        <svg :class="{ 'rotate-180': open }"
-                            class="w-4 h-4 transform transition-transform" fill="none"
-                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+{{-- Rechnungen (Collapsible) --}}
+<div 
+    x-data="{ open: {{ request()->routeIs('customer.e_invoice.*') || request()->routeIs('customer.new_invoice.*') ? 'true' : 'false' }} }" 
+    class="space-y-1"
+>
+    <button @click="open = !open"
+        class="flex justify-between w-full px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
+        <span>Meine Rechnungen</span>
+        <svg :class="{ 'rotate-180': open }"
+            class="w-4 h-4 transform transition-transform" fill="none"
+            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
 
-                    <div x-show="open" x-collapse class="pl-6 space-y-1">
-                        <a href="#"
-                            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
-                            Übersicht
-                        </a>
-                        <a href="#"
-                            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
-                            Neue Rechnung
-                        </a>
-                    </div>
-                </div>
+    <div x-show="open" x-collapse class="pl-6 space-y-1">
+        <a href="{{ route('customer.e_invoice.invoice_headers') }}"
+            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700
+            {{ request()->routeIs('customer.e_invoice.invoice_headers') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
+            Rechnungsköpfe
+        </a>
+        <a href="{{ route('customer.new_invoice.invoice_manager') }}"
+            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700
+            {{ request()->routeIs('customer.new_invoice.invoice_manager') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
+            E-Invoices
+        </a>
+        <a href="{{ route('customer.new_invoice.pdf_manager') }}"
+            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700
+            {{ request()->routeIs('customer.new_invoice.pdf_manager') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
+            Rechnungen PDF
+        </a>
+    </div>
+</div>
+
 
                 {{-- Nebenkosten (Collapsible) --}}
                 <div x-data="{ open: false }" class="space-y-1">

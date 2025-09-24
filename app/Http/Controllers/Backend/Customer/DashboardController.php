@@ -46,8 +46,45 @@ public function buchhaltung()
 public function rechnungen()
 {
     $customer = Auth::guard('customer')->user();
-    return view('backend.customer.dashboards.rechnungen', compact('customer'));
+
+    // Letzte 5 Rechnungen
+    $latestInvoices = \App\Models\ModInvoice::with('recipient')
+        ->where('customer_id', $customer->id)
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+
+    // Summen nach Status
+    $openAmount = \App\Models\ModInvoice::where('customer_id', $customer->id)
+        ->where('status', '!=', 'paid')
+        ->sum('total_amount');
+
+    $paidAmount = \App\Models\ModInvoice::where('customer_id', $customer->id)
+        ->where('status', 'paid')
+        ->sum('total_amount');
+
+    $invoiceStats = [
+        'draft'     => \App\Models\ModInvoice::where('customer_id', $customer->id)->where('status', 'draft')->count(),
+        'sent'      => \App\Models\ModInvoice::where('customer_id', $customer->id)->where('status', 'sent')->count(),
+        'paid'      => \App\Models\ModInvoice::where('customer_id', $customer->id)->where('status', 'paid')->count(),
+        'cancelled' => \App\Models\ModInvoice::where('customer_id', $customer->id)->where('status', 'cancelled')->count(),
+    ];
+
+    // Checks für Onboarding
+    $invoiceCreatorsCount = \App\Models\ModInvoiceCreator::where('customer_id', $customer->id)->count();
+    $recipientsCount      = \App\Models\ModInvoiceRecipient::where('customer_id', $customer->id)->count();
+
+    return view('backend.customer.dashboards.rechnungen', compact(
+        'customer',
+        'latestInvoices',
+        'openAmount',
+        'paidAmount',
+        'invoiceStats',
+        'invoiceCreatorsCount',
+        'recipientsCount'
+    ));
 }
+
 
 public function nebenkosten()
 {
