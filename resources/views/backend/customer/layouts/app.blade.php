@@ -62,6 +62,32 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- Buchen Primary Button -->
+                <div class="px-3">
+                    <a href="{{ route("customer.bookkeeping.dashboard") }}"
+                        class="block w-full text-center bg-pink-600 text-white font-semibold py-2 px-3 rounded-lg shadow hover:bg-pink-700 transition">
+                        + Buchen
+                    </a>
+                </div>
+
                 {{-- Buchhaltung (Collapsible) --}}
                 <div x-data="{ open: false }" class="space-y-1">
                     <button @click="open = !open"
@@ -76,18 +102,75 @@
                     </button>
 
                     <div x-show="open" x-collapse class="pl-6 space-y-1">
-                        <a href="#"
-                            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
-                            Übersicht
-                        </a>
-                        <a href="#"
-                            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
+                        <a href="{{ route("customer.bookkeeping.entries") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.entries") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
                             Buchungen
                         </a>
-                        <a href="#"
-                            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
-                            Reports
+                        <a href="{{ route("customer.bookkeeping.report_profit_loss") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.report_profit_loss") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Gewinn & Verlust
                         </a>
+
+                        <a href="{{ route("customer.bookkeeping.report_bwa") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.report_bwa") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            BWA
+                        </a>
+
+                        <a href="{{ route("customer.bookkeeping.report_balance_sheet") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.report_balance_sheet") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Bilanz
+                        </a>
+
+                        <a href="{{ route("customer.bookkeeping.report_vat") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.report_vat") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Umsatzsteuer
+                        </a>
+                        <a href="{{ route("customer.bookkeeping.fiscal_years") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.fiscal_years") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Buchungsjahre
+                        </a>
+                        <a href="{{ route("customer.bookkeeping.tenants") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.tenants") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Mandanten
+                        </a>
+                        <a href="{{ route("customer.bookkeeping.accounts") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.accounts") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Konten
+                        </a>
+                        <a href="{{ route("customer.bookkeeping.opening_balance") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.opening_balance") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Eröffnungsbilanz
+                        </a>
+
+                        <a href="{{ route("customer.bookkeeping.invoice_uploads") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.invoice_uploads") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Belege hochladen
+                        </a>
+
+                        <a href="{{ route("customer.bookkeeping.tank_receipt_upload") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.tank_receipt_upload") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Tankbelege hochladen
+                        </a>
+
+                        <a href="{{ route("customer.bookkeeping.import_entries") }}"
+                            class="block px-3 py-2 rounded-lg text-sm font-medium
+                          {{ request()->routeIs("customer.bookkeeping.import_entries") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
+                            Buchungen importieren
+                        </a>
+                        
+
+
                     </div>
                 </div>
 
@@ -125,6 +208,34 @@
         </a>
     </div>
 </div>
+
+
+
+{{-- Quittungen (Collapsible) --}}
+<div 
+    x-data="{ open: {{ request()->routeIs('customer.receipts.*') ? 'true' : 'false' }} }" 
+    class="space-y-1"
+>
+    <button @click="open = !open"
+        class="flex justify-between w-full px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
+        <span>Meine Quittungen</span>
+        <svg :class="{ 'rotate-180': open }"
+            class="w-4 h-4 transform transition-transform" fill="none"
+            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    <div x-show="open" x-collapse class="pl-6 space-y-1">
+        <a href="{{ route('customer.receipts.receipt_manager') }}"
+            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700
+            {{ request()->routeIs('customer.receipts.receipt_manager') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
+            Quittungen
+        </a>
+    </div>
+</div>
+
 
 
                 {{-- Nebenkosten (Collapsible) --}}
@@ -230,6 +341,13 @@
                     class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
                     Profil
                 </a>
+
+                {{-- Feedback --}}
+                <a href="{{ route('customer.feedback.board') }}"
+                    class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
+                    Feedback
+                </a>
+
             </nav>
         </aside>
 

@@ -5,59 +5,57 @@ namespace App\Livewire\Backend\Bookkeeping;
 use App\Models\Tenant;
 use App\Services\ChartOfAccountsService;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class TenantManager extends Component
 {
     public $tenants;
+    public $showForm = false; // Neue Property für Formular-Sichtbarkeit
 
     public $tenantId = null;
 
     // Formularfelder
     public $name;
-
     public $slug;
-
     public $email;
-
     public $phone;
-
     public $street;
-
     public $house_number;
-
     public $zip;
-
     public $city;
-
     public $country = 'Deutschland';
-
     public $tax_number;
-
     public $vat_id;
-
     public $commercial_register;
-
     public $court_register;
-
     public $bank_name;
-
     public $iban;
-
     public $bic;
-
     public $fiscal_year_start = '2025-01-01';
-
     public $currency = 'EUR';
-
     public $active = true;
-
-    public $chart_of_accounts = 'basic'; // Auswahl im Formular
+    public $chart_of_accounts = 'basic';
 
     protected function rules()
     {
         return [
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:tenants,slug,' . $this->tenantId,
+            'phone' => 'nullable|string|max:20',
+            'street' => 'required|string|max:255',
+            'house_number' => 'required|string|max:20',
+            'zip' => 'nullable|string|max:10',
+            'city' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'tax_number' => 'nullable|string|max:50',
+            'vat_id' => 'nullable|string|max:50',
+            'commercial_register' => 'nullable|string|max:100',
+            'court_register' => 'nullable|string|max:100',
+            'bank_name' => 'nullable|string|max:255',
+            'bic' => 'nullable|string|max:11',
+            'fiscal_year_start' => 'required|date',
+            'currency' => 'required|string|max:3',
+            'active' => 'boolean',
             'email' => 'nullable|email',
             'iban' => 'nullable|string|max:34',
             'chart_of_accounts' => 'required|string',
@@ -71,28 +69,42 @@ class TenantManager extends Component
 
     public function loadTenants()
     {
-        $this->tenants = Tenant::orderBy('name')->get();
+        $this->tenants = Tenant::where('customer_id', Auth::guard('customer')->id())
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function create()
+    {
+        $this->resetForm();
+        $this->showForm = true;
     }
 
     public function edit($id)
     {
-        $tenant = Tenant::findOrFail($id);
-        $this->tenantId = $tenant->id;
+        $tenant = Tenant::where('customer_id', Auth::guard('customer')->id())
+            ->findOrFail($id);
 
+        $this->tenantId = $tenant->id;
         $this->fill($tenant->toArray());
+        $this->showForm = true;
     }
 
     public function save()
     {
         $data = $this->validate();
 
+        $data['customer_id'] = Auth::guard('customer')->id();
+
         if ($this->tenantId) {
-            $tenant = Tenant::findOrFail($this->tenantId);
+            $tenant = Tenant::where('customer_id', $data['customer_id'])
+                ->findOrFail($this->tenantId);
+
             $tenant->update($data);
-            session()->flash('success', 'Tenant aktualisiert!');
+            session()->flash('success', 'Mandant aktualisiert!');
         } else {
-            Tenant::create($data);
-            session()->flash('success', 'Tenant angelegt!');
+            $tenant = Tenant::create($data);
+            session()->flash('success', 'Mandant angelegt!');
         }
 
         // Kontorahmen erzeugen
@@ -100,18 +112,21 @@ class TenantManager extends Component
 
         $this->resetForm();
         $this->loadTenants();
+        $this->showForm = false;
     }
 
     public function setCurrent($id)
     {
-        // alle zurücksetzen
-        Tenant::query()->update(['is_current' => false]);
+        $customerId = Auth::guard('customer')->id();
+
+        // nur Tenants dieses Customers zurücksetzen
+        Tenant::where('customer_id', $customerId)->update(['is_current' => false]);
 
         // neuen setzen
-        $tenant = Tenant::findOrFail($id);
+        $tenant = Tenant::where('customer_id', $customerId)->findOrFail($id);
         $tenant->update(['is_current' => true]);
 
-        session()->flash('success', "Tenant {$tenant->name} ist jetzt aktiv!");
+        session()->flash('success', "Mandant {$tenant->name} ist jetzt aktiv!");
         $this->loadTenants();
     }
 
@@ -121,17 +136,26 @@ class TenantManager extends Component
             'tenantId', 'name', 'slug', 'email', 'phone', 'street', 'house_number',
             'zip', 'city', 'country', 'tax_number', 'vat_id', 'commercial_register',
             'court_register', 'bank_name', 'iban', 'bic', 'fiscal_year_start',
-            'currency', 'active',
+            'currency', 'active', 'chart_of_accounts'
         ]);
+
         $this->country = 'Deutschland';
         $this->fiscal_year_start = '2025-01-01';
         $this->currency = 'EUR';
         $this->active = true;
+        $this->chart_of_accounts = 'basic';
+    }
+
+    public function cancel()
+    {
+        $this->resetForm();
+        $this->showForm = false;
     }
 
     public function render()
     {
         return view('livewire.backend.bookkeeping.tenant-manager')
-            ->extends('backend.layouts.backend');
+            ->extends('backend.customer.layouts.app')
+            ->section('content');
     }
 }

@@ -73,3 +73,42 @@ Route::get('e-invoice/invoice-recipients', \App\Livewire\Backend\EInvoice\Invoic
 
 
 Route::get('e-invoice/manage-invoice-recipients', \App\Livewire\Backend\EInvoice\ManageInvoiceRecipients::class)->name('e_invoice.manage_invoice_recipients');
+
+// Quittungen Routen
+Route::get('receipts/receipt-manager', \App\Livewire\Backend\Receipt\ReceiptManager::class)->name('receipts.receipt_manager');
+
+
+// Buchahltungsrouten
+Route::get('/bookkeeping', \App\Livewire\Backend\Bookkeeping\EntryForm::class)->name('bookkeeping.dashboard');
+
+Route::get('/bookkeeping/entries', \App\Livewire\Backend\Bookkeeping\EntryList::class)->name('bookkeeping.entries');
+
+Route::get('/bookkeeping/report-profit-loss', \App\Livewire\Backend\Bookkeeping\ReportProfitLoss::class)->name('bookkeeping.report_profit_loss');
+
+Route::get('/bookkeeping/report-vat', \App\Livewire\Backend\Bookkeeping\ReportVat::class)->name('bookkeeping.report_vat');
+
+Route::get('/bookkeeping/fiscal-years', \App\Livewire\Backend\Bookkeeping\FiscalYearForm::class)->name('bookkeeping.fiscal_years');
+
+Route::get('/bookkeeping/tenants', \App\Livewire\Backend\Bookkeeping\TenantManager::class)->name('bookkeeping.tenants');
+
+Route::get('/bookkeeping/accounts', \App\Livewire\Backend\Bookkeeping\AccountManager::class)->name('bookkeeping.accounts');
+
+Route::get('/bookkeeping/opening-balance', \App\Livewire\Backend\Bookkeeping\OpeningBalanceForm::class)->name('bookkeeping.opening_balance');
+
+Route::get('/bookkeeping/invoice-upload', \App\Livewire\Backend\Bookkeeping\InvoiceUploadForm::class)->name('bookkeeping.invoice_uploads');
+
+
+Route::get('/bookkeeping/report-bwa', \App\Livewire\Backend\Bookkeeping\ReportBwa::class)->name('bookkeeping.report_bwa');
+
+Route::get('/bookkeeping/tank-receipt-upload', \App\Livewire\Backend\Bookkeeping\TankReceiptUpload::class)->name('bookkeeping.tank_receipt_upload');
+
+Route::get('/bookkeeping/report-balance-sheet', \App\Livewire\Backend\Bookkeeping\ReportBalanceSheet::class)->name('bookkeeping.report_balance_sheet');
+
+Route::get('/bookkeeping/import-entries', \App\Livewire\Backend\Bookkeeping\ImportEntries::class)->name('bookkeeping.import_entries');
+
+
+
+// Feedback
+Route::get('/feedback', \App\Livewire\Backend\Customer\FeedbackForm::class)->name('feedback');
+Route::get('/feedback-board', \App\Livewire\Backend\Customer\FeedbackBoard::class)->name('feedback.board');
+// Ende Feedback

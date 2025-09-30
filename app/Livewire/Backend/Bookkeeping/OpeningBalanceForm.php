@@ -223,6 +223,7 @@ class OpeningBalanceForm extends Component
         $accounts = Account::where('tenant_id', $this->tenantId)->orderBy('number')->get();
 
         return view('livewire.backend.bookkeeping.opening-balance-form', compact('accounts'))
-            ->extends('backend.layouts.backend');
+                    ->extends('backend.customer.layouts.app')
+            ->section('content');
     }
 }

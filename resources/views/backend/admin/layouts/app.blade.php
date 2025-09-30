@@ -63,10 +63,11 @@
                     Einstellungen
                 </a>
 
-
-
-
-
+                {{-- Kunden Feedback --}}
+                <a href="{{ route('admin.customer.feedback') }}"
+                    class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
+                    Feedback
+                </a>
 
             </nav>
         </aside>
@@ -74,7 +75,6 @@
         {{-- Main --}}
         <div class="flex-1 flex flex-col">
 
-            {{-- Header --}}
 {{-- Header --}}
 <header class="bg-white dark:bg-gray-800 shadow p-4 flex justify-between items-center">
     <h2 class="text-lg font-semibold">@yield("page_title", "Dashboard")</h2>
@@ -82,14 +82,14 @@
     <div class="flex items-center space-x-4">
 
         {{-- Suche --}}
-        <a href=""
+        <a href="#"
            class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
            title="Suche">
             🔍
         </a>
 
         {{-- Hilfe / FAQ --}}
-        <a href=""
+        <a href="#"
            class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
            title="Hilfe & FAQ">
             ❓
@@ -100,6 +100,21 @@
            class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
            title="Einstellungen">
             ⚙️
+        </a>
+
+        {{-- Feedback --}}
+        @php
+            $newFeedbackCount = \App\Models\Feedback::where('status','open')->count();
+        @endphp
+        <a href="{{ route('admin.customer.feedback') }}"
+           class="relative p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+           title="Kunden-Feedback">
+            💬
+            @if($newFeedbackCount > 0)
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                    {{ $newFeedbackCount }}
+                </span>
+            @endif
         </a>
 
         {{-- Notifications --}}
@@ -161,8 +176,7 @@
             {{-- Dropdown --}}
             <div x-show="open" @click.away="open = false" x-transition
                 class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded shadow-lg z-50">
-                <div
-                    class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 border-b dark:border-gray-600">
+                <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 border-b dark:border-gray-600">
                     {{ auth("admin")->user()->email ?? "" }}
                 </div>
                 <a href="#"
@@ -184,8 +198,9 @@
 </header>
 
 
+
             {{-- Content --}}
-            <main class="p-6 flex-1">
+<main class="p-6 flex-1 min-w-0">  <!-- min-w-0 hinzufügen -->
                 @yield("content")
             </main>
         </div>

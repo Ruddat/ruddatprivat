@@ -8,6 +8,7 @@ export default {
         './resources/**/*.blade.php',
         './resources/**/*.js',
         './resources/**/*.vue',
+            "./node_modules/flowbite/**/*.js"
     ],
     theme: {
         extend: {
@@ -19,7 +20,8 @@ export default {
     darkMode: 'class',
     plugins: [
         require("daisyui"),
-    require('@tailwindcss/typography')   
+    require('@tailwindcss/typography'),
+        require('flowbite/plugin')   
     ],
         daisyui: {
         themes: [

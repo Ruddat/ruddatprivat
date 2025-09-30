@@ -9,7 +9,7 @@ class Tenant extends Model
     protected $fillable = [
         'name', 'slug', 'email', 'phone', 'street', 'house_number', 'zip', 'city', 'country',
         'tax_number', 'vat_id', 'commercial_register', 'court_register', 'bank_name',
-        'iban', 'bic', 'fiscal_year_start', 'currency', 'active', 'is_current',
+        'iban', 'bic', 'fiscal_year_start', 'currency', 'active', 'is_current', 'customer_id'
     ];
 
     public static function current()
@@ -36,4 +36,10 @@ class Tenant extends Model
     {
         return $this->hasMany(Entry::class);
     }
+
+public function chartOfAccounts()
+{
+    return $this->chart_of_accounts ?? 'skr03';
+}
+
 }

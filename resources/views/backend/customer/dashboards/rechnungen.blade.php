@@ -61,7 +61,7 @@
                 <p class="text-sm text-yellow-800">
                     Du hast noch keinen <strong>Empfänger</strong> angelegt.
                 </p>
-                <a href="{{ route('customer.e_invoice.recipients') }}"
+                <a href="{{ route('customer.e_invoice.customer_manager') }}"
                    class="mt-2 inline-block px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700">
                     Empfänger anlegen
                 </a>

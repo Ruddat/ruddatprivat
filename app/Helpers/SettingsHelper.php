@@ -181,7 +181,20 @@ class SettingsHelper
     'type'        => 'number',
     'description' => 'Enterprise Plan (monatlich, EUR)',
 ],
-
+[
+    'group'       => 'notifications',
+    'key'         => 'feedback_mail',
+    'value'       => '1',
+    'type'        => 'boolean',
+    'description' => 'Mail-Benachrichtigung bei neuem Feedback',
+],
+[
+    'group'       => 'notifications',
+    'key'         => 'feedback_inapp',
+    'value'       => '1',
+    'type'        => 'boolean',
+    'description' => 'In-App Notification im Header bei neuem Feedback',
+],
 
 
     ];

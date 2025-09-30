@@ -85,6 +85,7 @@ class AccountManager extends Component
         $frameworks = ChartOfAccountsService::getFrameworks();
 
         return view('livewire.backend.bookkeeping.account-manager', compact('accounts', 'frameworks'))
-            ->extends('backend.layouts.backend');
+                    ->extends('backend.customer.layouts.app')
+            ->section('content');
     }
 }

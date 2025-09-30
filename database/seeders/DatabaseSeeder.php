@@ -55,6 +55,9 @@ class DatabaseSeeder extends Seeder
           //  UtilityCostsUserSeeder::class,
           //  UtilityCostsSeeder::class,
             UserTestSeeder::class,
+            BwaGroupSeeder::class,
+            BkBalanceGroup::class,
+            BkBookingTemplateSeeder::class,
         ]);
 
     }

@@ -21,3 +21,7 @@ Route::get('/admin/customers', \App\Livewire\Backend\Admin\Customer\CustomersTab
 // System
         Route::get('settings', \App\Livewire\Backend\Admin\System\SettingsForm::class)
     ->name('settings');
+
+// Kunden Feedback
+Route::get('customers/feedback', \App\Livewire\Backend\Admin\Customer\FeedbackManager::class)
+    ->name('customer.feedback');    
