@@ -7,9 +7,11 @@
 
         <nav id="navmenu" class="navmenu">
             <ul>
-                <li><a href="{{ url('/#hero') }}" class="active">Home</a></li>
-                <li><a href="{{ url('/#about') }}">Über mich</a></li>
-                <li><a href="{{ url('/#why-us') }}">Services</a></li>
+                <li><a href="{{ url('/#hero') }}" class="active">Start</a></li>
+                <li><a href="{{ url('/#about') }}">Profil</a></li>
+                <li><a href="{{ url('/#services') }}">Leistungen</a></li>
+                <li><a href="{{ url('/#work') }}">Projekte</a></li>
+                <li><a href="{{ url('/#stack') }}">Stack</a></li>
                 <li><a href="{{ url('/#contact') }}">Kontakt</a></li>
             </ul>
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -17,17 +19,24 @@
 
         {{-- Auth Bereich --}}
         @guest('customer')
-            <a class="btn-getstarted me-2" href="{{ route('customer.login') }}">Login</a>
+            @if(\Illuminate\Support\Facades\Route::has('customer.login'))
+                <a class="btn-getstarted me-2" href="{{ route('customer.login') }}">Login</a>
+            @endif
         @endguest
 
         @auth('customer')
-            <a class="btn-getstarted me-2" href="{{ route('customer.dashboard') }}">Mein Bereich</a>
-            <form action="{{ route('customer.logout') }}" method="POST" class="d-inline">
-                @csrf
-                <button type="submit" class="btn-getstarted btn btn-danger ms-2">Logout</button>
-            </form>
+            @if(\Illuminate\Support\Facades\Route::has('customer.dashboard'))
+                <a class="btn-getstarted me-2" href="{{ route('customer.dashboard') }}">Mein Bereich</a>
+            @endif
+
+            @if(\Illuminate\Support\Facades\Route::has('customer.logout'))
+                <form action="{{ route('customer.logout') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn-getstarted btn btn-danger ms-2">Logout</button>
+                </form>
+            @endif
         @endauth
 
-        <a class="btn-getstarted" href="{{ url('/schedule-appointment') }}">Jetzt Starten</a>
+        <a class="btn-getstarted" href="{{ url('/#contact') }}">Anfragen</a>
     </div>
 </header>
