@@ -19,10 +19,12 @@
     color: #28a745;
 }
 
-.text-white {
-    font-weight: 900;
-    font-size: xxx-large;
-}
+/*
+    Wichtig:
+    Keine globalen Utility-Klassen wie .text-white überschreiben.
+    .text-white kommt von Bootstrap/Tailwind und darf keine Fontgrößen setzen,
+    sonst zerlegt es moderne Tailwind-Sektionen.
+*/
 
 @media (max-width: 991.98px) {
     #kontakt .d-flex {
@@ -34,4 +36,3 @@
         margin-top: 15px;
     }
 }
-
