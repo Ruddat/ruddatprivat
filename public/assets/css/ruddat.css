@@ -3,10 +3,9 @@
     ----------------------------------------------------------------
 */
 
-/* get-in-touch Styles */
 #accent-background {
     padding: 60px 0;
-    background-color: #28a745; /* Grüner Hintergrund */
+    background-color: #28a745;
     color: white;
 }
 
@@ -19,12 +18,33 @@
     color: #28a745;
 }
 
-/*
-    Wichtig:
-    Keine globalen Utility-Klassen wie .text-white überschreiben.
-    .text-white kommt von Bootstrap/Tailwind und darf keine Fontgrößen setzen,
-    sonst zerlegt es moderne Tailwind-Sektionen.
-*/
+#hero h1,
+#hero h2,
+#hero h3,
+#hero h4,
+#hero h5,
+#hero h6,
+#stack h1,
+#stack h2,
+#stack h3,
+#stack h4,
+#stack h5,
+#stack h6,
+#contact h1,
+#contact h2,
+#contact h3,
+#contact h4,
+#contact h5,
+#contact h6 {
+    color: inherit;
+}
+
+#hero a,
+#stack a,
+#contact a {
+    color: inherit;
+    text-decoration: none;
+}
 
 @media (max-width: 991.98px) {
     #kontakt .d-flex {
