@@ -1,91 +1,52 @@
-<footer id="footer" class="footer dark-background">
-    <div class="container footer-top">
-        <div class="row gy-4">
-            <div class="col-lg-5 col-md-12 footer-about">
-                <a href="{{ url("/") }}" class="logo d-flex align-items-center">
-                    <span class="sitename">Ingo Ruddat</span>
+<footer class="border-t border-slate-200 bg-slate-950 text-white">
+    <div class="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+        <div class="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
+            <div>
+                <a href="{{ url('/') }}" class="inline-flex items-center gap-3">
+                    <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-600 text-sm font-black text-white">IR</span>
+                    <span>
+                        <span class="block text-lg font-black">Ingo Ruddat</span>
+                        <span class="block text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Laravel · Webprodukte · SEO</span>
+                    </span>
                 </a>
-                <p>
-                    Passionierter Entwickler mit Fokus auf moderne Weblösungen, benutzerfreundliche
-                    Interfaces und effiziente Technologien.
-                    Gemeinsam gestalten wir digitale Erlebnisse, die begeistern und Ihre Vision
-                    Wirklichkeit werden lassen.
+                <p class="mt-5 max-w-md leading-7 text-slate-300">
+                    Ich entwickle digitale Systeme mit Laravel, Livewire, Adminbereichen, Automatisierung, KI-Workflows und skalierbaren Landingpage-Strukturen.
                 </p>
-<div class="social-links d-flex mt-4">
-    @php
-        $socials = [
-            'twitter'  => 'bi bi-twitter',
-            'facebook' => 'bi bi-facebook',
-            'instagram'=> 'bi bi-instagram',
-            'linkedin' => 'bi bi-linkedin',
-        ];
-    @endphp
-
-    @foreach($socials as $key => $icon)
-        @php $url = \App\Helpers\SettingsHelper::get("social.$key"); @endphp
-        @if(!empty($url))
-            <a href="{{ $url }}" target="_blank" rel="noopener">
-                <i class="{{ $icon }}"></i>
-            </a>
-        @endif
-    @endforeach
-</div>
             </div>
 
-            <div class="col-lg-2 col-6 footer-links">
-                <h4>Nützliche Links</h4>
-                <ul>
-                    <li><a href="{{ url("/") }}">Startseite</a></li>
-                    <li><a href="#">Über mich</a></li>
-                    <li><a href="{{ route("agb") }}">AGB</a></li>
-                    <li><a href="{{ route("datenschutz") }}">Datenschutz</a></li>
-                    <li><a href="{{ route("impressum") }}">Impressum</a></li>
+            <div>
+                <h3 class="text-sm font-black uppercase tracking-[0.24em] text-slate-400">Navigation</h3>
+                <ul class="mt-5 space-y-3 text-sm font-semibold text-slate-300">
+                    <li><a class="transition hover:text-white" href="{{ url('/#about') }}">Profil</a></li>
+                    <li><a class="transition hover:text-white" href="{{ url('/#services') }}">Leistungen</a></li>
+                    <li><a class="transition hover:text-white" href="{{ url('/#work') }}">Projekte</a></li>
+                    <li><a class="transition hover:text-white" href="{{ url('/#contact') }}">Kontakt</a></li>
                 </ul>
             </div>
 
-            <div class="col-lg-2 col-6 footer-links">
-                <h4>Meine Leistungen</h4>
-                <ul>
-                    <li><a href="#">Webdesign</a></li>
-                    <li><a href="#">Webentwicklung</a></li>
-                    <li><a href="#">Produktmanagement</a></li>
-                    <li><a href="#">Marketing</a></li>
-                    <li><a href="#">Grafikdesign</a></li>
+            <div>
+                <h3 class="text-sm font-black uppercase tracking-[0.24em] text-slate-400">Leistungen</h3>
+                <ul class="mt-5 space-y-3 text-sm font-semibold text-slate-300">
+                    <li>Laravel-Anwendungen</li>
+                    <li>Livewire-Oberflächen</li>
+                    <li>SEO-Landingpages</li>
+                    <li>Automatisierung & KI</li>
                 </ul>
             </div>
 
-<div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-    <h4>Kontakt</h4>
-    <p>
-        {{ \App\Helpers\SettingsHelper::get('company.address') }}<br>
-        {{ \App\Helpers\SettingsHelper::get('company.city') }}<br>
-        {{ \App\Helpers\SettingsHelper::get('company.state') }}<br>
-        {{ \App\Helpers\SettingsHelper::get('company.country') }}
-    </p>
-    <p>
-        <strong>Telefon:</strong>
-        <span>{{ \App\Helpers\SettingsHelper::get('company.phone') }}</span>
-    </p>
-    <p>
-        <strong>E-Mail:</strong>
-        <a href="mailto:{{ \App\Helpers\SettingsHelper::get('company.email') }}">
-            {{ \App\Helpers\SettingsHelper::get('company.email') }}
-        </a>
-    </p>
-    <p>
-        <strong>Website:</strong>
-        <a href="{{ \App\Helpers\SettingsHelper::get('company.website') }}" target="_blank">
-            {{ \App\Helpers\SettingsHelper::get('company.website') }}
-        </a>
-    </p>
-   {{--
-    <p>
-        <strong>USt-ID:</strong>
-        <span>{{ \App\Helpers\SettingsHelper::get('company.tax_id') }}</span>
-    </p>
-    --}}
+            <div>
+                <h3 class="text-sm font-black uppercase tracking-[0.24em] text-slate-400">Rechtliches</h3>
+                <ul class="mt-5 space-y-3 text-sm font-semibold text-slate-300">
+                    <li><a class="transition hover:text-white" href="{{ route('impressum') }}">Impressum</a></li>
+                    <li><a class="transition hover:text-white" href="{{ route('datenschutz') }}">Datenschutz</a></li>
+                    <li><a class="transition hover:text-white" href="{{ route('agb') }}">AGB</a></li>
+                </ul>
+            </div>
+        </div>
 
-</div>
+        <div class="mt-12 flex flex-col gap-4 border-t border-white/10 pt-7 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {{ date('Y') }} Ingo Ruddat. Alle Rechte vorbehalten.</p>
+            <p>Gebaut mit Laravel, Livewire und Tailwind CSS.</p>
         </div>
     </div>
 </footer>
