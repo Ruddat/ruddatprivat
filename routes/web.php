@@ -90,6 +90,7 @@ Route::get('/share/drive/{token}', [DriveShareController::class, 'show'])->name(
 Route::post('/share/drive/{token}/upload', [DriveShareController::class, 'upload'])->name('drive.share.upload');
 Route::get('/share/drive/{token}/download/{file}', [DriveShareController::class, 'download'])->name('drive.share.download');
 Route::get('/share/drive/{token}/stream/{file}', [DriveShareController::class, 'stream'])->name('drive.share.stream');
+Route::delete('/share/drive/{token}/delete/{file}', [DriveShareController::class, 'destroy'])->name('drive.share.delete');
 
 // Admin Routes
 Route::middleware(['auth'])->group(function () {});
