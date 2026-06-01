@@ -29,15 +29,18 @@
                 <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div class="flex gap-2">
                         @if ($currentFolder)
-                            <button wire:click="openFolder(null)" class="rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50">
+                            <button wire:click="openFolder(null)"
+                                class="rounded-lg border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50">
                                 Hauptverzeichnis
                             </button>
                         @endif
                     </div>
 
                     <div class="flex flex-col gap-2 md:flex-row">
-                        <input wire:model="folderName" type="text" placeholder="Neuer Ordner" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <button wire:click="createFolder" class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700">
+                        <input wire:model="folderName" type="text" placeholder="Neuer Ordner"
+                            class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <button wire:click="createFolder"
+                            class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700">
                             Ordner erstellen
                         </button>
                     </div>
@@ -45,17 +48,21 @@
 
                 <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                     @forelse ($folders as $folder)
-                        <div class="flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:bg-gray-50">
+                        <div
+                            class="flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:bg-gray-50">
                             <button wire:click="openFolder({{ $folder->id }})" class="text-left">
                                 <div class="font-semibold text-gray-900">📁 {{ $folder->name }}</div>
                                 <div class="text-xs text-gray-500">{{ $folder->created_at?->format('d.m.Y H:i') }}</div>
                             </button>
-                            <button wire:click="deleteFolder({{ $folder->id }})" onclick="return confirm('Ordner wirklich löschen?')" class="text-xs text-red-600 hover:underline">
+                            <button wire:click="deleteFolder({{ $folder->id }})"
+                                onclick="return confirm('Ordner wirklich löschen?')"
+                                class="text-xs text-red-600 hover:underline">
                                 Löschen
                             </button>
                         </div>
                     @empty
-                        <div class="rounded-xl border border-dashed border-gray-300 p-5 text-sm text-gray-500 md:col-span-2">
+                        <div
+                            class="rounded-xl border border-dashed border-gray-300 p-5 text-sm text-gray-500 md:col-span-2">
                             Keine Unterordner vorhanden.
                         </div>
                     @endforelse
@@ -70,8 +77,10 @@
                     @error('upload')
                         <div class="text-sm text-red-600">{{ $message }}</div>
                     @enderror
-                    <div wire:loading wire:target="upload" class="text-sm text-gray-500">Upload wird vorbereitet...</div>
-                    <button wire:click="saveUpload" wire:loading.attr="disabled" class="w-fit rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50">
+                    <div wire:loading wire:target="upload" class="text-sm text-gray-500">Upload wird vorbereitet...
+                    </div>
+                    <button wire:click="saveUpload" wire:loading.attr="disabled"
+                        class="w-fit rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50">
                         Datei hochladen
                     </button>
                 </div>
@@ -94,8 +103,11 @@
                                     <td class="px-4 py-3 text-gray-500">{{ $file->human_size }}</td>
                                     <td class="px-4 py-3">
                                         <div class="flex gap-3">
-                                            <a href="{{ route('drive.download', $file) }}" class="text-indigo-600 hover:underline">Download</a>
-                                            <button wire:click="deleteFile({{ $file->id }})" onclick="return confirm('Datei wirklich löschen?')" class="text-red-600 hover:underline">
+                                            <a href="{{ route('drive.download', $file) }}"
+                                                class="text-indigo-600 hover:underline">Download</a>
+                                            <button wire:click="deleteFile({{ $file->id }})"
+                                                onclick="return confirm('Datei wirklich löschen?')"
+                                                class="text-red-600 hover:underline">
                                                 Löschen
                                             </button>
                                         </div>
@@ -103,7 +115,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-4 py-6 text-center text-gray-500">Keine Dateien in diesem Ordner.</td>
+                                    <td colspan="4" class="px-4 py-6 text-center text-gray-500">Keine Dateien in
+                                        diesem Ordner.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -118,19 +131,29 @@
                 <p class="mb-4 text-sm text-gray-500">Freigaben gelten immer für den aktuell geöffneten Ordner.</p>
 
                 <div class="space-y-3">
-                    <input wire:model="shareName" type="text" placeholder="Name der Freigabe" class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <input wire:model="shareName" type="text" placeholder="Name der Freigabe"
+                        class="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
 
                     <label class="flex items-center gap-2 text-sm text-gray-700">
-                        <input wire:model="shareCanDownload" type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <input wire:model="shareCanDownload" type="checkbox"
+                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                         Download erlauben
                     </label>
 
                     <label class="flex items-center gap-2 text-sm text-gray-700">
-                        <input wire:model="shareCanUpload" type="checkbox" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <input wire:model="shareCanUpload" type="checkbox"
+                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                         Upload erlauben
                     </label>
 
-                    <button wire:click="createShare" class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700">
+                    <label class="flex items-center gap-2 text-sm text-gray-700">
+                        <input wire:model="shareCanDeleteOwnUploads" type="checkbox"
+                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        Eigene Uploads löschen erlauben
+                    </label>
+
+                    <button wire:click="createShare"
+                        class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700">
                         Freigabelink erstellen
                     </button>
                 </div>
@@ -144,9 +167,11 @@
                         <div class="rounded-xl border border-gray-200 p-3">
                             <div class="font-semibold text-gray-900">{{ $share->name }}</div>
                             <div class="text-xs text-gray-500">
-                                Upload: {{ $share->can_upload ? 'ja' : 'nein' }} · Download: {{ $share->can_download ? 'ja' : 'nein' }}
+                                Upload: {{ $share->can_upload ? 'ja' : 'nein' }} · Download:
+                                {{ $share->can_download ? 'ja' : 'nein' }}
                             </div>
-                            <a href="{{ route('drive.share.show', $share->token) }}" target="_blank" class="mt-2 block break-all text-xs text-indigo-600 hover:underline">
+                            <a href="{{ route('drive.share.show', $share->token) }}" target="_blank"
+                                class="mt-2 block break-all text-xs text-indigo-600 hover:underline">
                                 {{ route('drive.share.show', $share->token) }}
                             </a>
                         </div>
