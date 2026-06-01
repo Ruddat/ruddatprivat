@@ -15,6 +15,7 @@ class DriveFile extends Model
         'owner_id',
         'folder_id',
         'uploaded_by',
+        'public_upload_key',
         'original_name',
         'stored_name',
         'mime_type',
@@ -26,7 +27,7 @@ class DriveFile extends Model
 
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(Admin::class, 'owner_id');
     }
 
     public function folder(): BelongsTo
@@ -36,7 +37,7 @@ class DriveFile extends Model
 
     public function uploader(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'uploaded_by');
+        return $this->belongsTo(Admin::class, 'uploaded_by');
     }
 
     public function getHumanSizeAttribute(): string
