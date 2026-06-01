@@ -93,6 +93,9 @@ Route::get('/share/drive/{token}/stream/{file}', [DriveShareController::class, '
 Route::delete('/share/drive/{token}/delete/{file}', [DriveShareController::class, 'destroy'])->name('drive.share.delete');
 Route::get('/share/drive/{token}/folder/{folder}', [DriveShareController::class, 'folder'])
     ->name('drive.share.folder');
+Route::post('/share/drive/{token}/chunk-upload', [\App\Http\Controllers\DriveChunkUploadController::class, 'store'])
+    ->name('drive.share.chunk-upload');
+
 
 // Admin Routes
 Route::middleware(['auth'])->group(function () {});
