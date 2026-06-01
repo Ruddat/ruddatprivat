@@ -78,7 +78,7 @@ Route::get('/portfolio/{portfolioItem:slug}', [PortfolioController::class, 'show
     ->name('portfolio.show');
 
 // Private Dateibox
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/drive', \App\Livewire\Backend\Drive\FileManager::class)->name('admin.drive');
     Route::get('/admin/drive/download/{file}', DriveDownloadController::class)->name('drive.download');
 });
