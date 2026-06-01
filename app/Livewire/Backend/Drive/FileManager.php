@@ -30,6 +30,11 @@ class FileManager extends Component
         ];
     }
 
+    private function adminId(): int
+    {
+        return (int) auth('admin')->id();
+    }
+
     public function getCurrentFolderProperty(): ?DriveFolder
     {
         if (! $this->currentFolderId) {
@@ -37,7 +42,7 @@ class FileManager extends Component
         }
 
         return DriveFolder::query()
-            ->where('owner_id', auth()->id())
+            ->where('owner_id', $this->adminId())
             ->find($this->currentFolderId);
     }
 
@@ -45,7 +50,7 @@ class FileManager extends Component
     {
         if ($folderId) {
             DriveFolder::query()
-                ->where('owner_id', auth()->id())
+                ->where('owner_id', $this->adminId())
                 ->findOrFail($folderId);
         }
 
@@ -63,7 +68,7 @@ class FileManager extends Component
         }
 
         DriveFolder::create([
-            'owner_id' => auth()->id(),
+            'owner_id' => $this->adminId(),
             'parent_id' => $this->currentFolderId,
             'name' => $name,
         ]);
@@ -80,10 +85,10 @@ class FileManager extends Component
             return;
         }
 
-        $ownerId = auth()->id();
+        $ownerId = $this->adminId();
         $storedName = Str::uuid()->toString().'.'.$this->upload->getClientOriginalExtension();
         $folderPart = $this->currentFolderId ?: 'root';
-        $path = "private/drive/users/{$ownerId}/folders/{$folderPart}/{$storedName}";
+        $path = "private/drive/admins/{$ownerId}/folders/{$folderPart}/{$storedName}";
 
         Storage::disk('local')->put($path, file_get_contents($this->upload->getRealPath()));
 
@@ -107,7 +112,7 @@ class FileManager extends Component
     public function deleteFile(int $fileId): void
     {
         $file = DriveFile::query()
-            ->where('owner_id', auth()->id())
+            ->where('owner_id', $this->adminId())
             ->findOrFail($fileId);
 
         if (Storage::disk($file->disk)->exists($file->path)) {
@@ -121,7 +126,7 @@ class FileManager extends Component
     public function deleteFolder(int $folderId): void
     {
         $folder = DriveFolder::query()
-            ->where('owner_id', auth()->id())
+            ->where('owner_id', $this->adminId())
             ->withCount(['files', 'children'])
             ->findOrFail($folderId);
 
@@ -144,11 +149,11 @@ class FileManager extends Component
         }
 
         $folder = DriveFolder::query()
-            ->where('owner_id', auth()->id())
+            ->where('owner_id', $this->adminId())
             ->findOrFail($this->currentFolderId);
 
         $share = DriveShare::create([
-            'owner_id' => auth()->id(),
+            'owner_id' => $this->adminId(),
             'folder_id' => $folder->id,
             'name' => trim($this->shareName) !== '' ? trim($this->shareName) : $folder->name,
             'can_view' => true,
@@ -165,19 +170,19 @@ class FileManager extends Component
     public function render()
     {
         $folders = DriveFolder::query()
-            ->where('owner_id', auth()->id())
+            ->where('owner_id', $this->adminId())
             ->where('parent_id', $this->currentFolderId)
             ->orderBy('name')
             ->get();
 
         $files = DriveFile::query()
-            ->where('owner_id', auth()->id())
+            ->where('owner_id', $this->adminId())
             ->where('folder_id', $this->currentFolderId)
             ->latest()
             ->get();
 
         $shares = DriveShare::query()
-            ->where('owner_id', auth()->id())
+            ->where('owner_id', $this->adminId())
             ->latest()
             ->get();
 
