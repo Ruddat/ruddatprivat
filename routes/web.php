@@ -10,6 +10,7 @@ use App\Notifications\TelegramNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\DriveShareController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\DriveStreamController;
 use App\Http\Controllers\DriveDownloadController;
 use App\Http\Controllers\Frontend\PortfolioController;
 use App\Http\Controllers\Frontend\LandingPageController;
@@ -81,12 +82,14 @@ Route::get('/portfolio/{portfolioItem:slug}', [PortfolioController::class, 'show
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/drive', \App\Livewire\Backend\Drive\FileManager::class)->name('admin.drive');
     Route::get('/admin/drive/download/{file}', DriveDownloadController::class)->name('drive.download');
+    Route::get('/admin/drive/stream/{file}', DriveStreamController::class)->name('drive.stream');
 });
 
 // Öffentliche Dateifreigaben
 Route::get('/share/drive/{token}', [DriveShareController::class, 'show'])->name('drive.share.show');
 Route::post('/share/drive/{token}/upload', [DriveShareController::class, 'upload'])->name('drive.share.upload');
 Route::get('/share/drive/{token}/download/{file}', [DriveShareController::class, 'download'])->name('drive.share.download');
+Route::get('/share/drive/{token}/stream/{file}', [DriveShareController::class, 'stream'])->name('drive.share.stream');
 
 // Admin Routes
 Route::middleware(['auth'])->group(function () {});
