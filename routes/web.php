@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SitemapController;
 use App\Notifications\TelegramNotification;
 use Illuminate\Support\Facades\Notification;
+use App\Http\Controllers\DriveShareController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\DriveDownloadController;
 use App\Http\Controllers\Frontend\PortfolioController;
 use App\Http\Controllers\Frontend\LandingPageController;
 use App\Livewire\Frontend\SchedulingForm\SchedulingFormComponent;
@@ -26,7 +28,7 @@ use App\Http\Controllers\Frontend\CompleteIntake\CompleteIntakeController;
 //    if ($adminId) {
 //        Auth::guard('admin')->loginUsingId($adminId);
 
-        // Sessions bereinigen
+//        // Sessions bereinigen
 //        session()->forget(['impersonate_admin_id', 'impersonated_customer_id']);/
  //   }
 
@@ -74,6 +76,17 @@ Route::get('/portfolio', function () {
 
 Route::get('/portfolio/{portfolioItem:slug}', [PortfolioController::class, 'show'])
     ->name('portfolio.show');
+
+// Private Dateibox
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/drive', \App\Livewire\Backend\Drive\FileManager::class)->name('admin.drive');
+    Route::get('/admin/drive/download/{file}', DriveDownloadController::class)->name('drive.download');
+});
+
+// Öffentliche Dateifreigaben
+Route::get('/share/drive/{token}', [DriveShareController::class, 'show'])->name('drive.share.show');
+Route::post('/share/drive/{token}/upload', [DriveShareController::class, 'upload'])->name('drive.share.upload');
+Route::get('/share/drive/{token}/download/{file}', [DriveShareController::class, 'download'])->name('drive.share.download');
 
 // Admin Routes
 Route::middleware(['auth'])->group(function () {});
