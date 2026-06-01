@@ -20,6 +20,7 @@ class FileManager extends Component
     public string $shareName = '';
     public bool $shareCanUpload = true;
     public bool $shareCanDownload = true;
+    public bool $shareCanDeleteOwnUploads = false;
 
     protected function rules(): array
     {
@@ -159,11 +160,12 @@ class FileManager extends Component
             'can_view' => true,
             'can_download' => $this->shareCanDownload,
             'can_upload' => $this->shareCanUpload,
-            'can_delete' => false,
+            'can_delete' => $this->shareCanDeleteOwnUploads,
             'is_active' => true,
         ]);
 
         $this->shareName = '';
+        $this->shareCanDeleteOwnUploads = false;
         session()->flash('success', 'Freigabe erstellt: '.route('drive.share.show', $share->token));
     }
 
