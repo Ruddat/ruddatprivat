@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('drive_folders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('owner_id')->constrained('admins')->cascadeOnDelete();
             $table->foreignId('parent_id')->nullable()->constrained('drive_folders')->nullOnDelete();
             $table->string('name');
             $table->timestamps();
@@ -20,9 +20,9 @@ return new class extends Migration
 
         Schema::create('drive_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('owner_id')->constrained('admins')->cascadeOnDelete();
             $table->foreignId('folder_id')->nullable()->constrained('drive_folders')->nullOnDelete();
-            $table->foreignId('uploaded_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('uploaded_by')->nullable()->constrained('admins')->nullOnDelete();
             $table->string('original_name');
             $table->string('stored_name');
             $table->string('mime_type')->nullable();
@@ -37,7 +37,7 @@ return new class extends Migration
 
         Schema::create('drive_shares', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('owner_id')->constrained('admins')->cascadeOnDelete();
             $table->foreignId('folder_id')->nullable()->constrained('drive_folders')->cascadeOnDelete();
             $table->string('name');
             $table->string('token', 80)->unique();
@@ -55,14 +55,14 @@ return new class extends Migration
         Schema::create('drive_share_members', function (Blueprint $table) {
             $table->id();
             $table->foreignId('share_id')->constrained('drive_shares')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('admin_id')->constrained('admins')->cascadeOnDelete();
             $table->boolean('can_view')->default(true);
             $table->boolean('can_download')->default(true);
             $table->boolean('can_upload')->default(false);
             $table->boolean('can_delete')->default(false);
             $table->timestamps();
 
-            $table->unique(['share_id', 'user_id']);
+            $table->unique(['share_id', 'admin_id']);
         });
     }
 
