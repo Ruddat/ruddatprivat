@@ -10,7 +10,18 @@ use Illuminate\Support\Str;
 
 class DriveShareController extends Controller
 {
-    public function show(string $token)
+    private function publicUploadKey(Request $request, string $token): string
+    {
+        $sessionKey = 'drive_share_upload_key_'.$token;
+
+        if (! $request->session()->has($sessionKey)) {
+            $request->session()->put($sessionKey, Str::random(48));
+        }
+
+        return (string) $request->session()->get($sessionKey);
+    }
+
+    public function show(Request $request, string $token)
     {
         $share = DriveShare::query()
             ->with(['folder.files', 'folder.children'])
@@ -21,8 +32,9 @@ class DriveShareController extends Controller
 
         $folder = $share->folder;
         $files = $folder?->files()->latest()->get() ?? collect();
+        $publicUploadKey = $this->publicUploadKey($request, $token);
 
-        return view('drive.share', compact('share', 'folder', 'files'));
+        return view('drive.share', compact('share', 'folder', 'files', 'publicUploadKey'));
     }
 
     public function upload(Request $request, string $token)
@@ -47,6 +59,7 @@ class DriveShareController extends Controller
             'owner_id' => $ownerId,
             'folder_id' => $folderId,
             'uploaded_by' => null,
+            'public_upload_key' => $this->publicUploadKey($request, $token),
             'original_name' => $uploadedFile->getClientOriginalName(),
             'stored_name' => $storedName,
             'mime_type' => $uploadedFile->getMimeType(),
@@ -82,5 +95,22 @@ class DriveShareController extends Controller
             'Content-Type' => $file->mime_type ?: 'application/octet-stream',
             'Cache-Control' => 'private, max-age=0, must-revalidate',
         ]);
+    }
+
+    public function destroy(Request $request, string $token, DriveFile $file)
+    {
+        $share = DriveShare::query()->where('token', $token)->firstOrFail();
+
+        abort_unless($share->isUsable() && $share->can_delete, 403);
+        abort_unless((int) $file->folder_id === (int) $share->folder_id, 403);
+        abort_unless(hash_equals((string) $file->public_upload_key, $this->publicUploadKey($request, $token)), 403);
+
+        if (Storage::disk($file->disk)->exists($file->path)) {
+            Storage::disk($file->disk)->delete($file->path);
+        }
+
+        $file->delete();
+
+        return back()->with('success', 'Eigener Upload wurde gelöscht.');
     }
 }
