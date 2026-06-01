@@ -38,6 +38,19 @@
                         <div class="text-2xl font-bold">{{ $share->can_upload ? 'An' : 'Aus' }}</div>
                     </div>
                 </div>
+
+<div class="mb-6 text-sm text-slate-400">
+
+    <a href="{{ route('drive.share.show',$share->token) }}">
+        Hauptordner
+    </a>
+
+    @if($folder)
+        / {{ $folder->name }}
+    @endif
+
+</div>
+
             </div>
         </section>
 
@@ -53,6 +66,8 @@
                 <form method="post" action="{{ route('drive.share.upload', $share->token) }}"
                     enctype="multipart/form-data" class="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
                     @csrf
+<input type="hidden" name="folder_id" value="{{ $folder?->id }}">
+
                     <div>
                         <h2 class="text-xl font-bold">Datei hochladen</h2>
                         <p class="mt-1 text-sm text-slate-400">Bilder, MP3s, PDFs und Videos direkt in diese Freigabe
