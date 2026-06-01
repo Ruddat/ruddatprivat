@@ -86,7 +86,34 @@
             </section>
         @endif
 
+@if (isset($folders) && $folders->count())
+    <section class="mt-8">
+        <div class="mb-5">
+            <h2 class="text-2xl font-black">Ordner</h2>
+            <p class="text-sm text-slate-400">Unterordner dieser Freigabe.</p>
+        </div>
 
+        <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            @foreach ($folders as $childFolder)
+                <a href="{{ route('drive.share.folder', [$share->token, $childFolder]) }}"
+                   class="group rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-xl shadow-black/20 backdrop-blur transition hover:-translate-y-1 hover:border-indigo-300/40 hover:bg-white/[0.09]">
+
+                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/20 text-4xl ring-1 ring-white/10">
+                        📁
+                    </div>
+
+                    <div class="text-base font-bold text-white">
+                        {{ $childFolder->name }}
+                    </div>
+
+                    <div class="mt-1 text-xs text-slate-400">
+                        {{ $childFolder->files()->count() }} Dateien
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </section>
+@endif
 
         <section class="mt-8">
             <div class="mb-5 flex items-center justify-between">
