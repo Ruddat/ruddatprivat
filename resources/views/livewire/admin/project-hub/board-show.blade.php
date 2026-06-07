@@ -166,8 +166,9 @@
                         </div>
                     </div>
 
-                    {{-- Cards (scrollable) --}}
-                    <div class="space-y-2 p-2 overflow-y-auto flex-1">
+                    {{-- Cards (scrollable, draggable) --}}
+                    <div class="space-y-2 p-2 overflow-y-auto flex-1"
+                         data-projecthub-list-id="{{ $list->id }}">
                         @foreach ($list->cards as $card)
                             <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 cursor-grab"
                                  data-projecthub-card-id="{{ $card->id }}">

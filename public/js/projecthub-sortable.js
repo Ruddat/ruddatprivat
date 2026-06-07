@@ -1,6 +1,18 @@
 (function () {
     var initializedContainers = new WeakSet();
 
+    // Inject SortableJS drag styles (single-class names only – classList.add cannot handle spaces)
+    if (!document.getElementById('projecthub-sortable-styles')) {
+        var style = document.createElement('style');
+        style.id = 'projecthub-sortable-styles';
+        style.textContent = [
+            '.sortable-ghost { opacity: 0.4; }',
+            '.sortable-chosen { box-shadow: 0 0 0 2px #818cf8; border-radius: 0.5rem; }',
+            '.sortable-drag { box-shadow: 0 10px 25px -5px rgba(0,0,0,.25); transform: rotate(3deg); opacity: 0.95; }'
+        ].join('\n');
+        document.head.appendChild(style);
+    }
+
     function loadSortable(callback) {
         if (window.Sortable) {
             callback();
@@ -88,8 +100,9 @@
             new window.Sortable(cardsContainer, {
                 group: 'projecthub-cards',
                 animation: 150,
-                ghostClass: 'opacity-50',
-                dragClass: 'ring-2 ring-indigo-400',
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
                 filter: 'input, textarea, select, a, button',
                 preventOnFilter: false,
                 delay: 120,
