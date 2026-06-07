@@ -16,6 +16,7 @@ class ProjectShareShow extends Component
     public string $visitorName = '';
     public array $commentText = [];
     public array $uploads = [];
+    public array $newCardTitle = [];
 
     public function mount(string $token): void
     {
@@ -33,6 +34,46 @@ class ProjectShareShow extends Component
         ]);
 
         $this->share = $share;
+    }
+
+    public function createCard(int $listId): void
+    {
+        if (! in_array($this->share->permission, ['upload', 'approve'], true)) {
+            abort(403);
+        }
+
+        $this->validate([
+            'visitorName' => ['required', 'string', 'max:255'],
+            "newCardTitle.$listId" => ['required', 'string', 'max:255'],
+        ], [
+            'visitorName.required' => 'Bitte Namen eintragen.',
+            "newCardTitle.$listId.required" => 'Bitte Titel eintragen.',
+        ]);
+
+        $board = $this->share->shareable;
+
+        $list = $board->lists()
+            ->whereKey($listId)
+            ->firstOrFail();
+
+        $card = ProjectCard::create([
+            'project_board_id' => $board->id,
+            'project_list_id' => $list->id,
+            'title' => $this->newCardTitle[$listId],
+            'description' => 'Vom Kunden angelegt.',
+            'priority' => 'normal',
+            'status' => 'customer_request',
+            'position' => ((int) $list->cards()->max('position')) + 1,
+        ]);
+
+        $card->comments()->create([
+            'author_name' => $this->visitorName,
+            'comment' => 'Kunde hat diese Karte über den Freigabelink angelegt.',
+        ]);
+
+        $this->newCardTitle[$listId] = '';
+
+        session()->flash('success', 'Karte wurde angelegt.');
     }
 
     public function addComment(int $cardId): void
@@ -134,6 +175,7 @@ class ProjectShareShow extends Component
             'board' => $board,
             'canComment' => in_array($this->share->permission, ['comment', 'upload', 'approve'], true),
             'canUpload' => in_array($this->share->permission, ['upload', 'approve'], true),
+            'canCreateCards' => in_array($this->share->permission, ['upload', 'approve'], true),
             'canApprove' => $this->share->permission === 'approve',
         ])->extends('backend.customer.layouts.app')
             ->section('content');
