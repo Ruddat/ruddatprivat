@@ -40,4 +40,9 @@ class ProjectCard extends Model
     {
         return $this->hasMany(ProjectCardComment::class)->latest();
     }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(ProjectCardAttachment::class)->latest();
+    }
 }
