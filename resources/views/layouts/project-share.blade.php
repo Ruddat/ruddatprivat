@@ -31,6 +31,7 @@
     </footer>
 
     @livewireScripts
+    <script src="{{ asset('js/projecthub-sortable.js') }}" defer></script>
 </body>
 
 </html>

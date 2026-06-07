@@ -3,6 +3,7 @@
 namespace App\Livewire\Public;
 
 use App\Models\ProjectCard;
+use App\Models\ProjectList;
 use App\Models\ProjectShare;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -164,6 +165,29 @@ class ProjectShareShow extends Component
         session()->flash('success', 'Karte wurde freigegeben.');
     }
 
+    public function reorderCards(int $targetListId, array $orderedCardIds): void
+    {
+        // Only allow reorder with upload/approve permission
+        if (! in_array($this->share->permission, ['upload', 'approve'], true)) {
+            abort(403);
+        }
+
+        $board = $this->share->shareable;
+
+        $targetList = ProjectList::where('project_board_id', $board->id)
+            ->findOrFail($targetListId);
+
+        foreach (array_values($orderedCardIds) as $index => $cardId) {
+            ProjectCard::where('project_board_id', $board->id)
+                ->whereKey((int) $cardId)
+                ->update([
+                    'project_list_id' => $targetList->id,
+                    'position' => $index + 1,
+                    'status' => $targetList->is_done_list ? 'done' : 'open',
+                ]);
+        }
+    }
+
     public function render()
     {
         $board = $this->share->shareable()
@@ -179,6 +203,7 @@ class ProjectShareShow extends Component
             'canUpload' => in_array($this->share->permission, ['upload', 'approve'], true),
             'canCreateCards' => in_array($this->share->permission, ['upload', 'approve'], true),
             'canApprove' => $this->share->permission === 'approve',
+            'canDrag' => in_array($this->share->permission, ['upload', 'approve'], true),
         ]);
     }
 }

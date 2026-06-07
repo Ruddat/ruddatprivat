@@ -34,43 +34,40 @@
         return window.Livewire.find(root.getAttribute('wire:id'));
     }
 
-    function getListIdFromColumn(column) {
-        // Try data attribute first
-        var cardsContainer = column.querySelector('[data-projecthub-list-id]');
-        if (cardsContainer) {
-            return parseInt(cardsContainer.dataset.projecthubListId, 10);
-        }
-
-        // Try from the createCard form
-        var form = column.querySelector('form[wire\\:submit\\.prevent]');
-        if (form) {
-            var attr = form.getAttribute('wire:submit.prevent') || '';
-            var id = parseId(attr, 'createCard');
-            if (id) return id;
-        }
-
-        return null;
-    }
-
     function initProjectHubSortable() {
         if (!window.Sortable || !window.Livewire) return;
 
-        // Find columns: elements with the list structure
-        var columns = document.querySelectorAll('.w-72.bg-gray-50, .w-80.bg-gray-50');
+        // Find all containers that should be sortable:
+        // 1. Admin: .w-72.bg-gray-50 columns with .overflow-y-auto inside
+        // 2. Public share: elements with .projecthub-sortable class
+        // 3. Any element with data-projecthub-list-id that isn't initialized yet
 
-        columns.forEach(function (column) {
-            // Find the scrollable cards container
-            var cardsContainer = column.querySelector('.overflow-y-auto');
-            if (!cardsContainer) return;
+        var selectors = [
+            '.projecthub-sortable',
+            '.w-72.bg-gray-50 .overflow-y-auto[data-projecthub-list-id]',
+            '.w-80.bg-gray-50 .overflow-y-auto[data-projecthub-list-id]'
+        ];
 
-            var listId = getListIdFromColumn(column);
+        // Also find containers by data attribute directly (share view has them on the card container)
+        var dataContainers = document.querySelectorAll('[data-projecthub-list-id]');
+        var allContainers = new Set();
+
+        dataContainers.forEach(function (el) {
+            allContainers.add(el);
+        });
+
+        selectors.forEach(function (sel) {
+            document.querySelectorAll(sel).forEach(function (el) {
+                allContainers.add(el);
+            });
+        });
+
+        allContainers.forEach(function (cardsContainer) {
+            var listId = parseInt(cardsContainer.dataset.projecthubListId, 10);
             if (!listId) return;
 
-            cardsContainer.dataset.projecthubListId = String(listId);
-
-            // Make sure card elements have the card ID
+            // Ensure card elements have data-projecthub-card-id
             Array.from(cardsContainer.children).forEach(function (cardEl) {
-                // Already has data attribute from Blade
                 if (!cardEl.dataset.projecthubCardId) {
                     var btn = cardEl.querySelector('[wire\\:click^="openCard("]');
                     if (btn) {
