@@ -138,6 +138,22 @@ class BoardShow extends Component
         ]);
     }
 
+    public function reorderCards(int $targetListId, array $orderedCardIds): void
+    {
+        $targetList = ProjectList::where('project_board_id', $this->board->id)
+            ->findOrFail($targetListId);
+
+        foreach (array_values($orderedCardIds) as $index => $cardId) {
+            ProjectCard::where('project_board_id', $this->board->id)
+                ->whereKey((int) $cardId)
+                ->update([
+                    'project_list_id' => $targetList->id,
+                    'position' => $index + 1,
+                    'status' => $targetList->is_done_list ? 'done' : 'open',
+                ]);
+        }
+    }
+
     public function uploadFiles(int $cardId): void
     {
         $this->validate([
