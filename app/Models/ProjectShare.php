@@ -16,6 +16,7 @@ class ProjectShare extends Model
         'expires_at',
         'is_active',
         'created_by',
+        'created_by_admin_id',
         'last_opened_at',
     ];
 
