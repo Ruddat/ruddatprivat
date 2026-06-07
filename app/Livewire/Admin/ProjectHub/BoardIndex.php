@@ -13,6 +13,11 @@ class BoardIndex extends Component
     public ?string $client_name = null;
     public ?string $client_email = null;
 
+    private function adminId(): int
+    {
+        return (int) auth('admin')->id();
+    }
+
     public function createBoard(): void
     {
         $this->validate([
@@ -32,13 +37,13 @@ class BoardIndex extends Component
         }
 
         $board = ProjectBoard::create([
-            'user_id' => auth()->id(),
+            'owner_admin_id' => $this->adminId(),
             'title' => $this->title,
             'slug' => $slug,
             'description' => $this->description,
             'client_name' => $this->client_name,
             'client_email' => $this->client_email,
-            'position' => ProjectBoard::max('position') + 1,
+            'position' => ((int) ProjectBoard::max('position')) + 1,
         ]);
 
         $this->createDefaultLists($board);
@@ -74,7 +79,9 @@ class BoardIndex extends Component
 
     public function toggleBoard(int $boardId): void
     {
-        $board = ProjectBoard::findOrFail($boardId);
+        $board = ProjectBoard::query()
+            ->where('owner_admin_id', $this->adminId())
+            ->findOrFail($boardId);
 
         $board->update([
             'is_active' => ! $board->is_active,
@@ -85,6 +92,7 @@ class BoardIndex extends Component
     {
         return view('livewire.admin.project-hub.board-index', [
             'boards' => ProjectBoard::query()
+                ->where('owner_admin_id', $this->adminId())
                 ->withCount(['lists', 'cards'])
                 ->orderBy('position')
                 ->latest()
