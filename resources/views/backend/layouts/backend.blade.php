@@ -22,6 +22,7 @@
             'general' => [
                 ['label' => 'Dashboard', 'route' => 'admin.bookkeeping.dashboard'],
                 ['label' => 'Dateibox', 'route' => 'admin.drive'],
+                ['label' => 'ProjectHub', 'route' => 'admin.projecthub.index'],
             ],
             'bookkeeping' => [
                 ['label' => 'Buchungen', 'route' => 'admin.bookkeeping.entries'],
@@ -168,6 +169,7 @@
     </div>
 
     @livewireScripts
+    <script src="{{ asset('js/projecthub-sortable.js') }}" defer></script>
 </body>
 
 </html>
