@@ -170,7 +170,15 @@
                     <div class="space-y-2 p-2 overflow-y-auto flex-1"
                          data-projecthub-list-id="{{ $list->id }}">
                         @foreach ($list->cards as $card)
-                            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 cursor-grab"
+                            @php
+                                $cardBorderClass = match($card->priority) {
+                                    'urgent' => 'border-l-4 border-l-red-500 bg-red-50/40',
+                                    'high' => 'border-l-4 border-l-orange-400 bg-orange-50/40',
+                                    'low' => 'border-l-4 border-l-gray-300 bg-gray-50/60',
+                                    default => 'border-l-4 border-l-blue-400 bg-blue-50/30',
+                                };
+                            @endphp
+                            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 cursor-grab {{ $cardBorderClass }}"
                                  data-projecthub-card-id="{{ $card->id }}">
                                 <button wire:click="openCard({{ $card->id }})"
                                         class="text-left w-full">
@@ -184,13 +192,17 @@
                                                 <span class="text-xs px-1.5 py-0.5 rounded-full bg-green-100 text-green-700">OK</span>
                                             @endif
 
-                                            <span class="text-xs px-1.5 py-0.5 rounded-full
+                                            <span class="text-xs px-1.5 py-0.5 rounded-full font-medium
                                                 @if($card->priority === 'urgent') bg-red-100 text-red-700
                                                 @elseif($card->priority === 'high') bg-orange-100 text-orange-700
                                                 @elseif($card->priority === 'low') bg-gray-100 text-gray-500
                                                 @else bg-blue-100 text-blue-700
                                                 @endif">
-                                                {{ $card->priority }}
+                                                @if($card->priority === 'urgent') Dringend
+                                                @elseif($card->priority === 'high') Hoch
+                                                @elseif($card->priority === 'low') Niedrig
+                                                @else Normal
+                                                @endif
                                             </span>
                                         </div>
                                     </div>
