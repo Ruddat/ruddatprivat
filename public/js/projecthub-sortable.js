@@ -40,6 +40,18 @@
         return window.Livewire.find(root.getAttribute('wire:id'));
     }
 
+    function refreshCardIds(cardsContainer) {
+        Array.from(cardsContainer.children).forEach(function (cardElement) {
+            var opener = cardElement.querySelector('[wire\\:click^="openCard("]');
+            var cardId = opener ? parseId(opener.getAttribute('wire:click'), 'openCard') : null;
+
+            if (cardId) {
+                cardElement.dataset.projecthubCardId = String(cardId);
+                cardElement.style.cursor = 'grab';
+            }
+        });
+    }
+
     function initProjectHubSortable() {
         if (!window.Sortable || !window.Livewire) {
             return;
@@ -60,43 +72,45 @@
 
             var cardsContainer = column.querySelector('.space-y-3, .space-y-4');
 
-            if (!cardsContainer || cardsContainer.dataset.projecthubSortableReady === '1') {
+            if (!cardsContainer) {
+                return;
+            }
+
+            cardsContainer.dataset.projecthubListId = String(listId);
+            refreshCardIds(cardsContainer);
+
+            if (cardsContainer.dataset.projecthubSortableReady === '1') {
                 return;
             }
 
             cardsContainer.dataset.projecthubSortableReady = '1';
-            cardsContainer.dataset.projecthubListId = String(listId);
-
-            Array.from(cardsContainer.children).forEach(function (cardElement) {
-                var opener = cardElement.querySelector('[wire\\:click^="openCard("]');
-                var cardId = opener ? parseId(opener.getAttribute('wire:click'), 'openCard') : null;
-
-                if (cardId) {
-                    cardElement.dataset.projecthubCardId = String(cardId);
-                    cardElement.style.cursor = 'grab';
-                }
-            });
 
             new window.Sortable(cardsContainer, {
                 group: 'projecthub-cards',
                 animation: 150,
                 ghostClass: 'opacity-50',
                 dragClass: 'ring-2',
-                filter: 'input, textarea, select, button, a',
+                filter: 'input, textarea, select, a',
                 preventOnFilter: false,
+                delay: 120,
+                delayOnTouchOnly: false,
+                fallbackTolerance: 5,
+                onStart: function (event) {
+                    if (event.item) {
+                        event.item.style.cursor = 'grabbing';
+                    }
+                },
                 onEnd: function (event) {
+                    if (event.item) {
+                        event.item.style.cursor = 'grab';
+                    }
+
                     var target = event.to;
+                    refreshCardIds(target);
+
                     var targetListId = parseInt(target.dataset.projecthubListId, 10);
                     var orderedCardIds = Array.from(target.children)
                         .map(function (item) {
-                            if (!item.dataset.projecthubCardId) {
-                                var opener = item.querySelector('[wire\\:click^="openCard("]');
-                                var parsed = opener ? parseId(opener.getAttribute('wire:click'), 'openCard') : null;
-                                if (parsed) {
-                                    item.dataset.projecthubCardId = String(parsed);
-                                }
-                            }
-
                             return parseInt(item.dataset.projecthubCardId, 10);
                         })
                         .filter(Boolean);
