@@ -10,6 +10,7 @@ class ProjectBoard extends Model
 {
     protected $fillable = [
         'user_id',
+        'owner_admin_id',
         'title',
         'slug',
         'description',
@@ -38,11 +39,10 @@ class ProjectBoard extends Model
         return $this->morphMany(ProjectShare::class, 'shareable');
     }
 
-public function activeShare()
-{
-    return $this->morphOne(ProjectShare::class, 'shareable')
-        ->where('is_active', true)
-        ->latestOfMany();
-}
-
+    public function activeShare()
+    {
+        return $this->morphOne(ProjectShare::class, 'shareable')
+            ->where('is_active', true)
+            ->latestOfMany();
     }
+}
