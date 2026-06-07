@@ -1,22 +1,25 @@
 <?php
 
-use App\Models\FiscalYear;
 use App\Exports\EntriesExport;
 use App\Exports\EntriesRawExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SitemapController;
-use App\Notifications\TelegramNotification;
-use Illuminate\Support\Facades\Notification;
-use App\Http\Controllers\DriveShareController;
-use App\Http\Controllers\Frontend\HomeController;
-use App\Http\Controllers\DriveStreamController;
 use App\Http\Controllers\DriveDownloadController;
-use App\Http\Controllers\Frontend\PortfolioController;
-use App\Http\Controllers\Frontend\LandingPageController;
-use App\Livewire\Frontend\SchedulingForm\SchedulingFormComponent;
+use App\Http\Controllers\DriveShareController;
+use App\Http\Controllers\DriveStreamController;
 use App\Http\Controllers\Frontend\Appointment\AppointmentController;
 use App\Http\Controllers\Frontend\CompleteIntake\CompleteIntakeController;
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\LandingPageController;
+use App\Http\Controllers\Frontend\PortfolioController;
+use App\Http\Controllers\SitemapController;
+use App\Livewire\Admin\ProjectHub\BoardIndex;
+use App\Livewire\Admin\ProjectHub\BoardShow;
+use App\Livewire\Frontend\SchedulingForm\SchedulingFormComponent;
+use App\Livewire\Public\ProjectShareShow;
+use App\Models\FiscalYear;
+use App\Notifications\TelegramNotification;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 // Route::get('/', function () {
 //    return view('welcome');
@@ -84,6 +87,15 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/drive/download/{file}', DriveDownloadController::class)->name('drive.download');
     Route::get('/admin/drive/stream/{file}', DriveStreamController::class)->name('drive.stream');
 });
+
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/projecthub', BoardIndex::class)->name('projecthub.index');
+    Route::get('/projecthub/{board}', BoardShow::class)->name('projecthub.show');
+});
+
+Route::get('/share/project/{token}', ProjectShareShow::class)
+    ->name('project-share.show');
+
 
 // Öffentliche Dateifreigaben
 Route::get('/share/drive/{token}', [DriveShareController::class, 'show'])->name('drive.share.show');
