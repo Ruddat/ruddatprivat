@@ -4,8 +4,10 @@ namespace App\Livewire\Admin\ProjectHub;
 
 use App\Models\ProjectBoard;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('backend.layouts.backend')]
 class BoardIndex extends Component
 {
     public string $title = '';
@@ -86,6 +88,17 @@ class BoardIndex extends Component
         $board->update([
             'is_active' => ! $board->is_active,
         ]);
+    }
+
+    public function deleteBoard(int $boardId): void
+    {
+        $board = ProjectBoard::query()
+            ->where('owner_admin_id', $this->adminId())
+            ->findOrFail($boardId);
+
+        $board->delete();
+
+        session()->flash('success', 'Board wurde gelöscht.');
     }
 
     public function render()

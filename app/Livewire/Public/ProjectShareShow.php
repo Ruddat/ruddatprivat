@@ -4,9 +4,11 @@ namespace App\Livewire\Public;
 
 use App\Models\ProjectCard;
 use App\Models\ProjectShare;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Layout('layouts.project-share')]
 class ProjectShareShow extends Component
 {
     use WithFileUploads;
@@ -177,7 +179,6 @@ class ProjectShareShow extends Component
             'canUpload' => in_array($this->share->permission, ['upload', 'approve'], true),
             'canCreateCards' => in_array($this->share->permission, ['upload', 'approve'], true),
             'canApprove' => $this->share->permission === 'approve',
-        ])->extends('backend.customer.layouts.app')
-            ->section('content');
+        ]);
     }
 }

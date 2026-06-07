@@ -133,7 +133,7 @@
                 </div>
 
                 <div class="px-3 mt-auto">
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{ route('admin.logout') }}">
                         @csrf
                         <button type="submit" class="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-pink-50 hover:text-pink-600">
                             Abmelden

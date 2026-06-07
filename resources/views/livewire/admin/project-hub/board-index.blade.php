@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">ProjectHub</h1>
-            <p class="text-sm text-gray-500">Boards für interne Projekte und spätere Kundenfreigaben.</p>
+            <p class="text-sm text-gray-500">Boards f&uuml;r interne Projekte und sp&auml;tere Kundenfreigaben.</p>
         </div>
     </div>
 
@@ -86,11 +86,17 @@
                     <span>{{ $board->cards_count }} Karten</span>
                 </div>
 
-                <div class="mt-5">
+                <div class="mt-5 flex items-center gap-3">
                     <a href="{{ route('admin.projecthub.show', $board) }}"
                        class="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-500">
-                        Board öffnen
+                        Board &ouml;ffnen
                     </a>
+
+                    <button wire:click="deleteBoard({{ $board->id }})"
+                            wire:confirm="Board wirklich l&ouml;schen? Alle Listen und Karten werden ebenfalls gel&ouml;scht."
+                            class="px-4 py-2 rounded-xl border border-red-200 text-red-600 font-semibold hover:bg-red-50 text-sm">
+                        L&ouml;schen
+                    </button>
                 </div>
             </div>
         @empty

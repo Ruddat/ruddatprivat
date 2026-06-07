@@ -1,4 +1,6 @@
 (function () {
+    var initializedContainers = new WeakSet();
+
     function loadSortable(callback) {
         if (window.Sortable) {
             callback();
@@ -57,43 +59,52 @@
             return;
         }
 
-        var createForms = Array.from(document.querySelectorAll('form[wire\\:submit\\.prevent]'))
-            .filter(function (form) {
-                return (form.getAttribute('wire:submit.prevent') || '').indexOf('createCard(') === 0;
-            });
+        // Find all card containers by looking for the space-y-3 class inside list columns
+        var columns = document.querySelectorAll('.w-80.bg-gray-50');
 
-        createForms.forEach(function (form) {
-            var listId = parseId(form.getAttribute('wire:submit.prevent'), 'createCard');
-            var column = form.closest('.w-80');
-
-            if (!listId || !column) {
+        columns.forEach(function (column) {
+            var cardsContainer = column.querySelector('.space-y-3, .space-y-4');
+            if (!cardsContainer) {
                 return;
             }
 
-            var cardsContainer = column.querySelector('.space-y-3, .space-y-4');
+            // Try to get listId from the createCard form
+            var createForm = column.querySelector('form[wire\\:submit\\.prevent]');
+            var listId = null;
 
-            if (!cardsContainer) {
+            if (createForm) {
+                var submitAttr = createForm.getAttribute('wire:submit.prevent') || '';
+                listId = parseId(submitAttr, 'createCard');
+            }
+
+            // Fallback: try to get listId from data attribute
+            if (!listId && cardsContainer.dataset.projecthubListId) {
+                listId = parseInt(cardsContainer.dataset.projecthubListId, 10);
+            }
+
+            if (!listId) {
                 return;
             }
 
             cardsContainer.dataset.projecthubListId = String(listId);
             refreshCardIds(cardsContainer);
 
-            if (cardsContainer.dataset.projecthubSortableReady === '1') {
+            // Skip if already initialized
+            if (initializedContainers.has(cardsContainer)) {
                 return;
             }
 
-            cardsContainer.dataset.projecthubSortableReady = '1';
+            initializedContainers.add(cardsContainer);
 
             new window.Sortable(cardsContainer, {
                 group: 'projecthub-cards',
                 animation: 150,
                 ghostClass: 'opacity-50',
-                dragClass: 'ring-2',
-                filter: 'input, textarea, select, a',
+                dragClass: 'ring-2 ring-indigo-400',
+                filter: 'input, textarea, select, a, button',
                 preventOnFilter: false,
                 delay: 120,
-                delayOnTouchOnly: false,
+                delayOnTouchOnly: true,
                 fallbackTolerance: 5,
                 onStart: function (event) {
                     if (event.item) {
@@ -131,8 +142,17 @@
 
     document.addEventListener('DOMContentLoaded', boot);
     document.addEventListener('livewire:navigated', boot);
-    document.addEventListener('livewire:update', boot);
-    document.addEventListener('livewire:updated', boot);
+
+    // Use a debounced approach for Livewire DOM updates to avoid re-initializing too often
+    var updateTimer = null;
+    document.addEventListener('livewire:update', function () {
+        clearTimeout(updateTimer);
+        updateTimer = setTimeout(initProjectHubSortable, 100);
+    });
+    document.addEventListener('livewire:updated', function () {
+        clearTimeout(updateTimer);
+        updateTimer = setTimeout(initProjectHubSortable, 100);
+    });
 
     if (document.readyState !== 'loading') {
         boot();

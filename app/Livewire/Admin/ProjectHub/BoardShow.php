@@ -7,9 +7,11 @@ use App\Models\ProjectCard;
 use App\Models\ProjectList;
 use App\Models\ProjectShare;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+#[Layout('backend.layouts.backend')]
 class BoardShow extends Component
 {
     use WithFileUploads;
@@ -25,9 +27,22 @@ class BoardShow extends Component
     public ?string $editingDescription = null;
     public string $editingPriority = 'normal';
     public ?string $editingDueDate = null;
+    public string $editingComment = '';
 
     public ?string $sharePermission = 'comment';
     public ?string $shareExpiresAt = null;
+
+    // Board editing
+    public bool $showEditBoardModal = false;
+    public string $editBoardTitle = '';
+    public ?string $editBoardDescription = null;
+    public ?string $editBoardClientName = null;
+    public ?string $editBoardClientEmail = null;
+
+    // List editing
+    public bool $showEditListModal = false;
+    public ?int $editingListId = null;
+    public string $editingListTitle = '';
 
     private function adminId(): int
     {
@@ -86,6 +101,7 @@ class BoardShow extends Component
         $this->editingDescription = $card->description;
         $this->editingPriority = $card->priority;
         $this->editingDueDate = $card->due_date?->format('Y-m-d');
+        $this->editingComment = '';
     }
 
     public function saveCard(): void
@@ -118,9 +134,41 @@ class BoardShow extends Component
             'editingDescription',
             'editingPriority',
             'editingDueDate',
+            'editingComment',
         ]);
 
         $this->editingPriority = 'normal';
+    }
+
+    public function addComment(): void
+    {
+        $this->validate([
+            'editingComment' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $card = ProjectCard::where('project_board_id', $this->board->id)
+            ->findOrFail($this->editingCardId);
+
+        $card->comments()->create([
+            'author_name' => 'Admin',
+            'comment' => $this->editingComment,
+        ]);
+
+        $this->editingComment = '';
+        session()->flash('success', 'Kommentar wurde gespeichert.');
+    }
+
+    public function approveCard(): void
+    {
+        $card = ProjectCard::where('project_board_id', $this->board->id)
+            ->findOrFail($this->editingCardId);
+
+        $card->update([
+            'approved_at' => now(),
+            'status' => 'approved',
+        ]);
+
+        session()->flash('success', 'Karte wurde freigegeben.');
     }
 
     public function moveCard(int $cardId, int $targetListId): void
@@ -216,6 +264,84 @@ class BoardShow extends Component
             ->update(['is_active' => false]);
 
         session()->flash('success', 'Kundenlink wurde deaktiviert.');
+    }
+
+    // --- Board editing ---
+
+    public function openEditBoard(): void
+    {
+        $this->editBoardTitle = $this->board->title;
+        $this->editBoardDescription = $this->board->description;
+        $this->editBoardClientName = $this->board->client_name;
+        $this->editBoardClientEmail = $this->board->client_email;
+        $this->showEditBoardModal = true;
+    }
+
+    public function saveBoard(): void
+    {
+        $this->validate([
+            'editBoardTitle' => ['required', 'string', 'max:255'],
+            'editBoardDescription' => ['nullable', 'string'],
+            'editBoardClientName' => ['nullable', 'string', 'max:255'],
+            'editBoardClientEmail' => ['nullable', 'email', 'max:255'],
+        ]);
+
+        $this->board->update([
+            'title' => $this->editBoardTitle,
+            'description' => $this->editBoardDescription,
+            'client_name' => $this->editBoardClientName,
+            'client_email' => $this->editBoardClientEmail,
+        ]);
+
+        $this->showEditBoardModal = false;
+        session()->flash('success', 'Board wurde aktualisiert.');
+    }
+
+    public function deleteBoard(): void
+    {
+        $this->board->delete();
+        $this->redirectRoute('admin.projecthub.index', navigate: true);
+    }
+
+    // --- List editing / deletion ---
+
+    public function openEditList(int $listId): void
+    {
+        $list = ProjectList::where('project_board_id', $this->board->id)
+            ->findOrFail($listId);
+
+        $this->editingListId = $list->id;
+        $this->editingListTitle = $list->title;
+        $this->showEditListModal = true;
+    }
+
+    public function saveList(): void
+    {
+        $this->validate([
+            'editingListTitle' => ['required', 'string', 'max:255'],
+        ]);
+
+        $list = ProjectList::where('project_board_id', $this->board->id)
+            ->findOrFail($this->editingListId);
+
+        $list->update([
+            'title' => $this->editingListTitle,
+        ]);
+
+        $this->showEditListModal = false;
+        $this->reset(['editingListId', 'editingListTitle']);
+        session()->flash('success', 'Liste wurde aktualisiert.');
+    }
+
+    public function deleteList(int $listId): void
+    {
+        $list = ProjectList::where('project_board_id', $this->board->id)
+            ->findOrFail($listId);
+
+        $list->cards()->delete();
+        $list->delete();
+
+        session()->flash('success', 'Liste wurde gelöscht.');
     }
 
     public function getActiveShareProperty(): ?ProjectShare
