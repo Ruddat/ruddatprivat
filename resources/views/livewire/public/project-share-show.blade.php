@@ -34,7 +34,7 @@
         @if ($canComment || $canUpload)
             <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
                 <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Dein Name für Kommentare und Uploads
+                    Dein Name für Kommentare, Uploads und neue Karten
                 </label>
 
                 <input type="text"
@@ -105,21 +105,15 @@
                                             <div class="grid grid-cols-2 gap-3">
                                                 @foreach ($card->attachments as $attachment)
                                                     @if ($attachment->is_image)
-                                                        <a href="{{ $attachment->url }}"
-                                                           target="_blank"
-                                                           class="block rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-                                                            <img src="{{ $attachment->url }}"
-                                                                 alt="{{ $attachment->original_name }}"
-                                                                 class="w-full h-28 object-cover">
+                                                        <a href="{{ $attachment->url }}" target="_blank" class="block rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                                                            <img src="{{ $attachment->url }}" alt="{{ $attachment->original_name }}" class="w-full h-28 object-cover">
                                                             <div class="p-2">
                                                                 <p class="text-xs font-medium text-gray-700 truncate">{{ $attachment->original_name }}</p>
                                                                 <p class="text-xs text-gray-400">{{ $attachment->readable_size }}</p>
                                                             </div>
                                                         </a>
                                                     @else
-                                                        <a href="{{ $attachment->url }}"
-                                                           target="_blank"
-                                                           class="block rounded-xl border border-gray-200 bg-gray-50 p-3 hover:bg-gray-100">
+                                                        <a href="{{ $attachment->url }}" target="_blank" class="block rounded-xl border border-gray-200 bg-gray-50 p-3 hover:bg-gray-100">
                                                             <p class="text-sm font-semibold text-gray-800 truncate">{{ $attachment->original_name }}</p>
                                                             <p class="text-xs text-gray-400 mt-1">{{ $attachment->readable_size }}</p>
                                                         </a>
@@ -168,8 +162,7 @@
                                                 <p class="text-sm text-red-600">{{ $message }}</p>
                                             @enderror
 
-                                            <button type="submit"
-                                                    class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-500">
+                                            <button type="submit" class="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-500">
                                                 Dateien speichern
                                             </button>
                                         </form>
@@ -177,26 +170,19 @@
 
                                     @if ($canComment)
                                         <form wire:submit.prevent="addComment({{ $card->id }})" class="mt-4 space-y-2">
-                                            <textarea wire:model.defer="commentText.{{ $card->id }}"
-                                                      rows="3"
-                                                      placeholder="Kommentar zu dieser Karte schreiben..."
-                                                      class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm"></textarea>
+                                            <textarea wire:model.defer="commentText.{{ $card->id }}" rows="3" placeholder="Kommentar zu dieser Karte schreiben..." class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm"></textarea>
 
                                             @error('commentText.' . $card->id)
                                                 <p class="text-sm text-red-600">{{ $message }}</p>
                                             @enderror
 
                                             <div class="flex items-center justify-between gap-2">
-                                                <button type="submit"
-                                                        class="px-3 py-2 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800">
+                                                <button type="submit" class="px-3 py-2 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800">
                                                     Kommentar speichern
                                                 </button>
 
                                                 @if ($canApprove && ! $card->approved_at)
-                                                    <button type="button"
-                                                            wire:click="approveCard({{ $card->id }})"
-                                                            wire:confirm="Diese Aufgabe wirklich freigeben?"
-                                                            class="px-3 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-500">
+                                                    <button type="button" wire:click="approveCard({{ $card->id }})" wire:confirm="Diese Aufgabe wirklich freigeben?" class="px-3 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-500">
                                                         Freigeben
                                                     </button>
                                                 @endif
@@ -210,6 +196,27 @@
                                 </div>
                             @endforelse
                         </div>
+
+                        @if ($canCreateCards)
+                            <form wire:submit.prevent="createCard({{ $list->id }})" class="mt-4 space-y-2 rounded-xl bg-white border border-gray-200 p-3">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase">
+                                    Neue Karte vorschlagen
+                                </label>
+
+                                <input type="text"
+                                       wire:model.defer="newCardTitle.{{ $list->id }}"
+                                       placeholder="z.B. Bitte neues Bild einbauen"
+                                       class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+
+                                @error('newCardTitle.' . $list->id)
+                                    <p class="text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+
+                                <button type="submit" class="w-full px-3 py-2 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800">
+                                    Karte anlegen
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 @endforeach
             </div>
