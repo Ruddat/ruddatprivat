@@ -22,78 +22,70 @@
     }
 
     function parseId(value, method) {
-        if (!value) {
-            return null;
-        }
-
+        if (!value) return null;
         var pattern = new RegExp(method + '\\((\\d+)');
         var match = value.match(pattern);
-
         return match ? parseInt(match[1], 10) : null;
     }
 
     function getLivewireComponent(element) {
         var root = element.closest('[wire\\:id]');
-
-        if (!root || !window.Livewire) {
-            return null;
-        }
-
+        if (!root || !window.Livewire) return null;
         return window.Livewire.find(root.getAttribute('wire:id'));
     }
 
-    function refreshCardIds(cardsContainer) {
-        Array.from(cardsContainer.children).forEach(function (cardElement) {
-            var opener = cardElement.querySelector('[wire\\:click^="openCard("]');
-            var cardId = opener ? parseId(opener.getAttribute('wire:click'), 'openCard') : null;
+    function getListIdFromColumn(column) {
+        // Try data attribute first
+        var cardsContainer = column.querySelector('[data-projecthub-list-id]');
+        if (cardsContainer) {
+            return parseInt(cardsContainer.dataset.projecthubListId, 10);
+        }
 
-            if (cardId) {
-                cardElement.dataset.projecthubCardId = String(cardId);
-                cardElement.style.cursor = 'grab';
-            }
-        });
+        // Try from the createCard form
+        var form = column.querySelector('form[wire\\:submit\\.prevent]');
+        if (form) {
+            var attr = form.getAttribute('wire:submit.prevent') || '';
+            var id = parseId(attr, 'createCard');
+            if (id) return id;
+        }
+
+        return null;
     }
 
     function initProjectHubSortable() {
-        if (!window.Sortable || !window.Livewire) {
-            return;
-        }
+        if (!window.Sortable || !window.Livewire) return;
 
-        // Find all card containers by looking for the space-y-3 class inside list columns
-        var columns = document.querySelectorAll('.w-80.bg-gray-50');
+        // Find columns: elements with the list structure
+        var columns = document.querySelectorAll('.w-72.bg-gray-50, .w-80.bg-gray-50');
 
         columns.forEach(function (column) {
-            var cardsContainer = column.querySelector('.space-y-3, .space-y-4');
-            if (!cardsContainer) {
-                return;
-            }
+            // Find the scrollable cards container
+            var cardsContainer = column.querySelector('.overflow-y-auto');
+            if (!cardsContainer) return;
 
-            // Try to get listId from the createCard form
-            var createForm = column.querySelector('form[wire\\:submit\\.prevent]');
-            var listId = null;
-
-            if (createForm) {
-                var submitAttr = createForm.getAttribute('wire:submit.prevent') || '';
-                listId = parseId(submitAttr, 'createCard');
-            }
-
-            // Fallback: try to get listId from data attribute
-            if (!listId && cardsContainer.dataset.projecthubListId) {
-                listId = parseInt(cardsContainer.dataset.projecthubListId, 10);
-            }
-
-            if (!listId) {
-                return;
-            }
+            var listId = getListIdFromColumn(column);
+            if (!listId) return;
 
             cardsContainer.dataset.projecthubListId = String(listId);
-            refreshCardIds(cardsContainer);
 
-            // Skip if already initialized
-            if (initializedContainers.has(cardsContainer)) {
-                return;
-            }
+            // Make sure card elements have the card ID
+            Array.from(cardsContainer.children).forEach(function (cardEl) {
+                // Already has data attribute from Blade
+                if (!cardEl.dataset.projecthubCardId) {
+                    var btn = cardEl.querySelector('[wire\\:click^="openCard("]');
+                    if (btn) {
+                        var cardId = parseId(btn.getAttribute('wire:click'), 'openCard');
+                        if (cardId) {
+                            cardEl.dataset.projecthubCardId = String(cardId);
+                        }
+                    }
+                }
+                if (cardEl.dataset.projecthubCardId) {
+                    cardEl.style.cursor = 'grab';
+                }
+            });
 
+            if (initializedContainers.has(cardsContainer)) return;
             initializedContainers.add(cardsContainer);
 
             new window.Sortable(cardsContainer, {
@@ -107,19 +99,14 @@
                 delayOnTouchOnly: true,
                 fallbackTolerance: 5,
                 onStart: function (event) {
-                    if (event.item) {
-                        event.item.style.cursor = 'grabbing';
-                    }
+                    if (event.item) event.item.style.cursor = 'grabbing';
                 },
                 onEnd: function (event) {
-                    if (event.item) {
-                        event.item.style.cursor = 'grab';
-                    }
+                    if (event.item) event.item.style.cursor = 'grab';
 
                     var target = event.to;
-                    refreshCardIds(target);
-
                     var targetListId = parseInt(target.dataset.projecthubListId, 10);
+
                     var orderedCardIds = Array.from(target.children)
                         .map(function (item) {
                             return parseInt(item.dataset.projecthubCardId, 10);
@@ -127,8 +114,7 @@
                         .filter(Boolean);
 
                     var component = getLivewireComponent(target);
-
-                    if (component && targetListId) {
+                    if (component && targetListId && orderedCardIds.length > 0) {
                         component.call('reorderCards', targetListId, orderedCardIds);
                     }
                 }
@@ -143,18 +129,13 @@
     document.addEventListener('DOMContentLoaded', boot);
     document.addEventListener('livewire:navigated', boot);
 
-    // Use a debounced approach for Livewire DOM updates to avoid re-initializing too often
     var updateTimer = null;
-    document.addEventListener('livewire:update', function () {
+    function debouncedInit() {
         clearTimeout(updateTimer);
-        updateTimer = setTimeout(initProjectHubSortable, 100);
-    });
-    document.addEventListener('livewire:updated', function () {
-        clearTimeout(updateTimer);
-        updateTimer = setTimeout(initProjectHubSortable, 100);
-    });
-
-    if (document.readyState !== 'loading') {
-        boot();
+        updateTimer = setTimeout(initProjectHubSortable, 150);
     }
+    document.addEventListener('livewire:update', debouncedInit);
+    document.addEventListener('livewire:updated', debouncedInit);
+
+    if (document.readyState !== 'loading') boot();
 })();

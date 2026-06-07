@@ -10,22 +10,21 @@
     @livewireStyles
 </head>
 
-<body class="min-h-screen bg-gray-100 text-gray-800 antialiased">
-    <nav class="bg-white shadow-sm">
+<body class="min-h-screen bg-gray-100 text-gray-800 antialiased flex flex-col">
+    <nav class="bg-white shadow-sm flex-shrink-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-14 items-center">
                 <span class="text-lg font-bold text-pink-600">RuddatTech</span>
-
                 <span class="text-xs text-gray-400">Projektfreigabe</span>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        @yield('content')
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {{ $slot }}
     </main>
 
-    <footer class="bg-white border-t mt-auto">
+    <footer class="bg-white border-t flex-shrink-0">
         <div class="max-w-7xl mx-auto px-4 py-4 text-center text-xs text-gray-500">
             &copy; {{ date('Y') }} RuddatTech – Alle Rechte vorbehalten.
         </div>
