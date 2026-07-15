@@ -50,9 +50,14 @@
                     ProjectHub
                 </a>
 
-                <a href="{{ route('portfolio') }}"
+                <a href="{{ route('admin.portfolio.editor') }}"
                     class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
-                    Portfolio
+                    Portfolio Editor
+                </a>
+
+                <a href="{{ route('portfolio') }}" target="_blank"
+                    class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
+                    Portfolio ansehen
                 </a>
 
                 <a href="{{ route('admin.customers.feedback') }}"
