@@ -81,7 +81,8 @@ class DriveShareController extends Controller
 
         $files = $folder?->files()
             ->latest()
-            ->get() ?? collect();
+            ->paginate(18)
+            ->withQueryString() ?? collect();
 
         $publicUploadKey = $this->publicUploadKey($request, $token);
 
@@ -110,7 +111,8 @@ class DriveShareController extends Controller
 
         $files = $folder->files()
             ->latest()
-            ->get();
+            ->paginate(18)
+            ->withQueryString();
 
         $publicUploadKey = $this->publicUploadKey($request, $token);
 
