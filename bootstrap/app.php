@@ -8,42 +8,33 @@ use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__ . '/../routes/web.php',
-        api: __DIR__ . '/../routes/api.php',
-        commands: __DIR__ . '/../routes/console.php',
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
-        then: function () {
-            // 🔓 Admin-Auth (Login, Logout)
-            Route::middleware(['web'])
+        then: function (): void {
+            Route::middleware('web')
                 ->prefix('admin')
-                ->as('admin.')
+                ->name('admin.')
                 ->group(base_path('routes/admin-auth.php'));
 
-            // 🔒 Admin-Bereich
             Route::middleware(['web', 'auth:admin'])
                 ->prefix('admin')
-                ->as('admin.')
+                ->name('admin.')
                 ->group(base_path('routes/admin.php'));
 
-            // 🔓 Customer-Auth (Login, Logout)
-            Route::middleware(['web'])
+            Route::middleware('web')
                 ->prefix('customer')
-                ->as('customer.')
+                ->name('customer.')
                 ->group(base_path('routes/customer-auth.php'));
 
-            // 🔒 Customer-Bereich
             Route::middleware(['web', 'auth:customer', 'onboarded'])
                 ->prefix('customer')
-                ->as('customer.')
+                ->name('customer.')
                 ->group(base_path('routes/customer.php'));
-
-            // Öffentlich
-            Route::middleware(['web'])
-                ->group(base_path('routes/web.php'));
         },
     )
-    ->withMiddleware(function (Middleware $middleware) {
-        // Web-Stack
+    ->withMiddleware(function (Middleware $middleware): void {
         $middleware->group('web', [
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -53,13 +44,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
         ]);
 
-        // API-Stack
         $middleware->group('api', [
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
         ]);
 
-        // Aliases
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'auth.admin' => \App\Http\Middleware\Authenticate::class,
@@ -67,10 +56,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'onboarded' => \App\Http\Middleware\EnsureCustomerOnboarded::class,
         ]);
 
-        // Globale Middleware
         $middleware->append(TrackBotAccess::class);
     })
-    ->withExceptions(function (Exceptions $exceptions) {
+    ->withExceptions(function (Exceptions $exceptions): void {
         //
     })
     ->create();
