@@ -40,7 +40,8 @@ class CustomersTable extends Component
 
         return view('livewire.backend.admin.customer.customers-table', [
             'customers' => $customers,
-        ]);
+        ])->extends('backend.admin.layouts.app')
+          ->section('content');
     }
 
     public function createCustomer()

@@ -50,6 +50,11 @@
                     ProjectHub
                 </a>
 
+                <a href="{{ route('portfolio') }}"
+                    class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
+                    Portfolio
+                </a>
+
                 <a href="{{ route('admin.customers.feedback') }}"
                     class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
                     Feedback

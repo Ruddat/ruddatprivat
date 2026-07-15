@@ -26,10 +26,10 @@ Route::get('/projecthub/{board}', BoardShow::class)
 Route::get('/customers', \App\Livewire\Backend\Admin\Customer\CustomersTable::class)
     ->name('customers.index');
 
-Route::get('/impersonate/{customer}', [ImpersonateController::class, 'start'])
+Route::post('/customers/{customer}/impersonate', [ImpersonateController::class, 'start'])
     ->name('impersonate.start');
 
-Route::get('/impersonate/stop', [ImpersonateController::class, 'stop'])
+Route::post('/impersonate/stop', [ImpersonateController::class, 'stop'])
     ->name('impersonate.stop');
 
 Route::get('/settings', \App\Livewire\Backend\Admin\System\SettingsForm::class)

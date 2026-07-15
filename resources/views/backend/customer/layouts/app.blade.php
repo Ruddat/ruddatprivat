@@ -35,26 +35,26 @@
             <nav class="p-4 space-y-2">
 {{-- Dashboard --}}
 <a href="{{ route('customer.dashboard') }}"
-   class="block px-4 py-2 rounded transition 
+   class="block px-4 py-2 rounded transition
           {{ request()->routeIs('customer.dashboard') ? 'bg-pink-100 text-pink-700 font-semibold' : 'hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700' }}">
    Dashboard
 </a>
 
 {{-- Modul Dashboards --}}
 <a href="{{ route('customer.dashboard.rechnungen') }}"
-   class="block px-4 py-2 rounded transition 
+   class="block px-4 py-2 rounded transition
           {{ request()->routeIs('customer.dashboard.rechnungen') ? 'bg-pink-100 text-pink-700 font-semibold' : 'hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700' }}">
    Rechnungen
 </a>
 
 <a href="{{ route('customer.dashboard.buchhaltung') }}"
-   class="block px-4 py-2 rounded transition 
+   class="block px-4 py-2 rounded transition
           {{ request()->routeIs('customer.dashboard.buchhaltung') ? 'bg-pink-100 text-pink-700 font-semibold' : 'hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700' }}">
    Buchhaltung
 </a>
 
 <a href="{{ route('customer.dashboard.nebenkosten') }}"
-   class="block px-4 py-2 rounded transition 
+   class="block px-4 py-2 rounded transition
           {{ request()->routeIs('customer.dashboard.nebenkosten') ? 'bg-pink-100 text-pink-700 font-semibold' : 'hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700' }}">
    Nebenkosten
 </a>
@@ -168,15 +168,15 @@
                           {{ request()->routeIs("customer.bookkeeping.import_entries") ? "bg-pink-100 text-pink-700 font-semibold" : "text-gray-700 hover:bg-pink-50 hover:text-pink-600" }}">
                             Buchungen importieren
                         </a>
-                        
+
 
 
                     </div>
                 </div>
 
 {{-- Rechnungen (Collapsible) --}}
-<div 
-    x-data="{ open: {{ request()->routeIs('customer.e_invoice.*') || request()->routeIs('customer.new_invoice.*') ? 'true' : 'false' }} }" 
+<div
+    x-data="{ open: {{ request()->routeIs('customer.e_invoice.*') ? 'true' : 'false' }} }"
     class="space-y-1"
 >
     <button @click="open = !open"
@@ -196,14 +196,14 @@
             {{ request()->routeIs('customer.e_invoice.invoice_headers') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
             Rechnungsköpfe
         </a>
-        <a href="{{ route('customer.new_invoice.invoice_manager') }}"
+        <a href="{{ route('customer.e_invoice.invoice_manager') }}"
             class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700
-            {{ request()->routeIs('customer.new_invoice.invoice_manager') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
+            {{ request()->routeIs('customer.e_invoice.invoice_manager') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
             E-Invoices
         </a>
-        <a href="{{ route('customer.new_invoice.pdf_manager') }}"
+        <a href="{{ route('customer.e_invoice.pdf_manager') }}"
             class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700
-            {{ request()->routeIs('customer.new_invoice.pdf_manager') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
+            {{ request()->routeIs('customer.e_invoice.pdf_manager') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
             Rechnungen PDF
         </a>
     </div>
@@ -212,8 +212,8 @@
 
 
 {{-- Quittungen (Collapsible) --}}
-<div 
-    x-data="{ open: {{ request()->routeIs('customer.receipts.*') ? 'true' : 'false' }} }" 
+<div
+    x-data="{ open: {{ request()->routeIs('customer.receipts.*') ? 'true' : 'false' }} }"
     class="space-y-1"
 >
     <button @click="open = !open"
@@ -228,11 +228,11 @@
     </button>
 
     <div x-show="open" x-collapse class="pl-6 space-y-1">
-        <a href="{{ route('customer.receipts.receipt_manager') }}"
-            class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700
-            {{ request()->routeIs('customer.receipts.receipt_manager') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
-            Quittungen
-        </a>
+<a href="{{ route('customer.receipts.index') }}"
+    class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700
+    {{ request()->routeIs('customer.receipts.index') ? 'bg-pink-100 text-pink-700 font-semibold' : '' }}">
+    Quittungen
+</a>
     </div>
 </div>
 
@@ -275,12 +275,12 @@
                             Mieter
                         </a>
 
-                        <a href="{{ route("customer.utility_costs.tenant_payments") }}"
+                        <a href="{{ route("customer.utility_costs.tenants_payments") }}"
                             class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
                             Nebenkostenzahlungen
                         </a>
 
-                       
+
                         <a href="{{ route("customer.utility_costs.refunds_or_payments") }}"
                             class="block px-4 py-2 rounded hover:bg-pink-50 hover:text-pink-600 dark:hover:bg-gray-700">
                             Rückzahlungen / Nachzahlungen
@@ -411,18 +411,48 @@
 
                 <div class=''>
 
-@if(session()->has('impersonator_id'))
-    @php
-        $admin = \App\Models\Admin::find(session('impersonator_id'));
-        $customer = Auth::guard('customer')->user();
-    @endphp
+@if (
+    session()->has('impersonator_id')
+    && auth('admin')->check()
+    && auth('customer')->check()
+)
+    <div
+        class="mb-6 flex flex-col gap-3 rounded-lg border border-yellow-400
+               bg-yellow-100 p-4 text-yellow-900 shadow
+               sm:flex-row sm:items-center sm:justify-between"
+    >
+        <div>
+            <div class="font-bold">
+                ⚠️ Kundenansicht aktiv
+            </div>
 
-    <div class="bg-yellow-200 text-yellow-800 p-3 mb-4 rounded">
-        ⚠️ Du bist aktuell als Customer <strong>{{ $customer->name }}</strong> eingeloggt
-        @if($admin) – gestartet von <strong>{{ $admin->name }}</strong> @endif
-        (<a href="{{ route('customer.impersonate.stop') }}" class="underline font-bold">
-            Zurück zum Admin
-        </a>)
+            <div class="text-sm">
+                Du arbeitest gerade als
+
+                <strong>
+                    {{ auth('customer')->user()->name }}
+                </strong>
+
+                @if (auth('customer')->user()->email)
+                    ({{ auth('customer')->user()->email }})
+                @endif
+            </div>
+        </div>
+
+        <form
+            method="POST"
+            action="{{ route('admin.impersonate.stop') }}"
+        >
+            @csrf
+
+            <button
+                type="submit"
+                class="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-semibold
+                       text-white transition hover:bg-yellow-700"
+            >
+                Zurück zum Admin
+            </button>
+        </form>
     </div>
 @endif
 
