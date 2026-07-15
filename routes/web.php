@@ -1,197 +1,66 @@
 <?php
 
-use App\Exports\EntriesExport;
-use App\Exports\EntriesRawExport;
-use App\Http\Controllers\DriveDownloadController;
 use App\Http\Controllers\DriveShareController;
-use App\Http\Controllers\DriveStreamController;
 use App\Http\Controllers\Frontend\Appointment\AppointmentController;
 use App\Http\Controllers\Frontend\CompleteIntake\CompleteIntakeController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\LandingPageController;
 use App\Http\Controllers\Frontend\PortfolioController;
 use App\Http\Controllers\SitemapController;
-use App\Livewire\Admin\ProjectHub\BoardIndex;
-use App\Livewire\Admin\ProjectHub\BoardShow;
 use App\Livewire\Frontend\SchedulingForm\SchedulingFormComponent;
 use App\Livewire\Public\ProjectShareShow;
-use App\Models\FiscalYear;
 use App\Notifications\TelegramNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
-use Maatwebsite\Excel\Facades\Excel;
-
-// Route::get('/', function () {
-//    return view('welcome');
-// });
-
-// impersonate verlassen
-//Route::get('/admin/impersonate/leave', function () {
-//    $adminId = session('impersonate_admin_id');
-
-//    if ($adminId) {
-//        Auth::guard('admin')->loginUsingId($adminId);
-
-//        // Sessions bereinigen
-//        session()->forget(['impersonate_admin_id', 'impersonated_customer_id']);/
- //   }
-
-   // return redirect()->route('admin.dashboard');
-//})->name('admin.impersonate.leave');
-
-
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/schedule-appointment', [AppointmentController::class, 'index'])->name('schedule.appointment');
+Route::get('/schedule-appointment', [AppointmentController::class, 'index'])
+    ->name('schedule.appointment');
 
-Route::get('/intake-form', [CompleteIntakeController::class, 'index'])->name('intake.form');
+Route::get('/intake-form', [CompleteIntakeController::class, 'index'])
+    ->name('intake.form');
 
 Route::get('/send-telegram', function () {
-    $chatId = '6508551813'; // Chat-ID des Benutzers
+    $chatId = '6508551813';
     $message = 'Dies ist eine Testnachricht von deinem Telegram-Bot!';
 
-    Notification::route('telegram', $chatId)->notify(new TelegramNotification($message, $chatId));
+    Notification::route('telegram', $chatId)
+        ->notify(new TelegramNotification($message, $chatId));
 
     return 'Nachricht gesendet!';
 });
 
 Route::get('/schedule-meeting', SchedulingFormComponent::class);
 
-// Impressum
-Route::get('/impressum', function () {
-    return view('frontend.home.sections.imprint');
-})->name('impressum');
-
-// AGB
-Route::get('/agb', function () {
-    return view('frontend.home.sections.agb');
-})->name('agb');
-
-// Datenschutz
-Route::get('/datenschutz', function () {
-    return view('frontend.home.sections.privacy');
-})->name('datenschutz');
-
-// Portfolio
-Route::get('/portfolio', function () {
-    return view('frontend.home.sections.portfolio');
-})->name('portfolio');
+Route::view('/impressum', 'frontend.home.sections.imprint')->name('impressum');
+Route::view('/agb', 'frontend.home.sections.agb')->name('agb');
+Route::view('/datenschutz', 'frontend.home.sections.privacy')->name('datenschutz');
+Route::view('/portfolio', 'frontend.home.sections.portfolio')->name('portfolio');
 
 Route::get('/portfolio/{portfolioItem:slug}', [PortfolioController::class, 'show'])
     ->name('portfolio.show');
 
-// Private Dateibox
-Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin/drive', \App\Livewire\Backend\Drive\FileManager::class)->name('admin.drive');
-    Route::get('/admin/drive/download/{file}', DriveDownloadController::class)->name('drive.download');
-    Route::get('/admin/drive/stream/{file}', DriveStreamController::class)->name('drive.stream');
-});
-
-Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/projecthub', BoardIndex::class)->name('projecthub.index');
-    Route::get('/projecthub/{board}', BoardShow::class)->name('projecthub.show');
-});
-
 Route::get('/share/project/{token}', ProjectShareShow::class)
     ->name('project-share.show');
 
-
-// Öffentliche Dateifreigaben
-Route::get('/share/drive/{token}', [DriveShareController::class, 'show'])->name('drive.share.show');
-Route::post('/share/drive/{token}/upload', [DriveShareController::class, 'upload'])->name('drive.share.upload');
-Route::get('/share/drive/{token}/download/{file}', [DriveShareController::class, 'download'])->name('drive.share.download');
-Route::get('/share/drive/{token}/stream/{file}', [DriveShareController::class, 'stream'])->name('drive.share.stream');
-Route::delete('/share/drive/{token}/delete/{file}', [DriveShareController::class, 'destroy'])->name('drive.share.delete');
+Route::get('/share/drive/{token}', [DriveShareController::class, 'show'])
+    ->name('drive.share.show');
+Route::post('/share/drive/{token}/upload', [DriveShareController::class, 'upload'])
+    ->name('drive.share.upload');
+Route::get('/share/drive/{token}/download/{file}', [DriveShareController::class, 'download'])
+    ->name('drive.share.download');
+Route::get('/share/drive/{token}/stream/{file}', [DriveShareController::class, 'stream'])
+    ->name('drive.share.stream');
+Route::delete('/share/drive/{token}/delete/{file}', [DriveShareController::class, 'destroy'])
+    ->name('drive.share.delete');
 Route::get('/share/drive/{token}/folder/{folder}', [DriveShareController::class, 'folder'])
     ->name('drive.share.folder');
 Route::post('/share/drive/{token}/chunk-upload', [\App\Http\Controllers\DriveChunkUploadController::class, 'store'])
     ->name('drive.share.chunk-upload');
 
-
-// Admin Routes
-Route::middleware(['auth'])->group(function () {});
-
-// /Route::get('/admin/dashboard', Dashboard::class)->name('dashboard');
-
-Route::get('/admin/portfolio-manager', \App\Livewire\Backend\PortfolioManager::class)->name('admin.portfolio.manager');
-
-Route::get('/admin/portfolio-editor', \App\Livewire\Backend\PortfolioEditor::class)->name('admin.portfolio.editor');
-
-// Buchahltungsrouten
-Route::get('/admin/bookkeeping', \App\Livewire\Backend\Bookkeeping\EntryForm::class)->name('admin.bookkeeping.dashboard');
-
-Route::get('/admin/bookkeeping/entries', \App\Livewire\Backend\Bookkeeping\EntryList::class)->name('admin.bookkeeping.entries');
-
-Route::get('/admin/bookkeeping/report-profit-loss', \App\Livewire\Backend\Bookkeeping\ReportProfitLoss::class)->name('admin.bookkeeping.report_profit_loss');
-
-Route::get('/admin/bookkeeping/report-vat', \App\Livewire\Backend\Bookkeeping\ReportVat::class)->name('admin.bookkeeping.report_vat');
-
-Route::get('/admin/bookkeeping/fiscal-years', \App\Livewire\Backend\Bookkeeping\FiscalYearForm::class)->name('admin.bookkeeping.fiscal_years');
-
-Route::get('/admin/bookkeeping/tenants', \App\Livewire\Backend\Bookkeeping\TenantManager::class)->name('admin.bookkeeping.tenants');
-
-Route::get('/admin/bookkeeping/accounts', \App\Livewire\Backend\Bookkeeping\AccountManager::class)->name('admin.bookkeeping.accounts');
-
-Route::get('/admin/bookkeeping/opening-balance', \App\Livewire\Backend\Bookkeeping\OpeningBalanceForm::class)->name('admin.bookkeeping.opening_balance');
-
-Route::get('/export/fancy', function () {
-    $tenantId = session('current_tenant_id', 1);
-    $fiscalYear = FiscalYear::current($tenantId);
-
-    return Excel::download(new EntriesExport($tenantId, $fiscalYear->id), 'buchungen.xlsx');
-})->name('admin.bookkeeping.entries.export.fancy');
-
-Route::get('/export/raw', function () {
-    $tenantId = session('current_tenant_id', 1);
-    $fiscalYear = FiscalYear::current($tenantId);
-
-    return Excel::download(new EntriesRawExport($tenantId, $fiscalYear->id), 'buchungen_raw.xlsx');
-})->name('admin.bookkeeping.entries.export.raw');
-
-// End Admin Routes
-
 Route::get('/lp/{slug}', [LandingPageController::class, 'show'])
     ->where('slug', '[A-Za-z0-9\-]+');
 
-Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
-
-// Nebenkosten konstrukt
-
-//   Route::get('/admin/utility-costs/dashboard', \App\Livewire\Backend\UtilityCosts\Dashboard::class)->name('admin.utility_costs.dashboard');
-
-// Route::get('/admin/utility-costs/billing-calculation', \App\Livewire\Backend\UtilityCosts\BillingCalculation::class)->name('admin.utility_costs.billing_calculation');
-
-// Route::get('/admin/utility-costs/billing-generation', \App\Livewire\Backend\UtilityCosts\BillingGeneration::class)->name('admin.utility_costs.billing_generation');
-
-// Route::get('/admin/utility-costs/billing-headers', \App\Livewire\Backend\UtilityCosts\BillingHeaderForm::class)->name('admin.utility_costs.billing_headers');
-
-// Route::get('/admin/utility-costs/billing-table', \App\Livewire\Backend\UtilityCosts\BillingTable::class)->name('admin.utility_costs.billing_table');
-
-// Route::get('/admin/utility-costs/heating-costs', \App\Livewire\Backend\UtilityCosts\HeatingCostManagement::class)->name('admin.utility_costs.heating_costs');
-
-// Route::get('/admin/utility-costs/refunds-or-payments', \App\Livewire\Backend\UtilityCosts\RefundsOrPaymentsComponent::class)->name('admin.utility_costs.refunds_or_payments');
-
-// Route::get('/admin/utility-costs/rental-objects', \App\Livewire\Backend\UtilityCosts\RentalObjectTable::class)->name('admin.utility_costs.rental_objects');
-
-// Route::get('/admin/utility-costs/tenants-payments', \App\Livewire\Backend\UtilityCosts\TenantPayments::class)->name('admin.utility_costs.tenant_payments');
-
-// Route::get('/admin/utility-costs/tenants', \App\Livewire\Backend\UtilityCosts\TenantTable::class)->name('admin.utility_costs.tenants');
-
-// Route::get('/admin/utility-costs/utility-cost-recording', \App\Livewire\Backend\UtilityCosts\UtilityCostRecording::class)->name('admin.utility_costs.utility_cost_recording');
-
-// Route::get('/admin/utility-costs/utility-costs', \App\Livewire\Backend\UtilityCosts\UtilityCostTable::class)->name('admin.utility_costs.utility_costs');
-
-//        Route::get('/admin/utility-costs/rental-objects', \App\Livewire\Backend\UtilityCosts\RentalObjectManager::class)->name('admin.utility_costs.rental_objects');
-
-//      Route::get('/admin/utility-costs/tenants', \App\Livewire\Backend\UtilityCosts\TenantManager::class)->name('admin.utility_costs.tenants');
-
-//    Route::get('/admin/utility-costs/utility-costs', \App\Livewire\Backend\UtilityCosts\UtilityCostManager::class)->name('admin.utility_costs.utility_costs');
-
-//  Route::get('/admin/utility-costs/tenant-payments', \App\Livewire\Backend\UtilityCosts\TenantPaymentManager::class)->name('admin.utility_costs.tenant_payments');
-
-// Route::get('/admin/utility-costs/billing-headers', \App\Livewire\Backend\UtilityCosts\BillingHeaderManager::class)->name('admin.utility_costs.billing_headers');
-
-//       Route::get('/admin/utility-costs/billing-records', \App\Livewire\Backend\UtilityCosts\BillingRecordManager::class)->name('admin.utility_costs.billing_records');
-
-//        Route::get('/admin/utility-costs/generate-billing', \App\Livewire\Backend\UtilityCosts\GenerateBillingForm::class)->name('admin.utility_costs.generate_billing');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])
+    ->name('sitemap');
