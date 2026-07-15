@@ -1,27 +1,39 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\ImpersonateController;
+use App\Livewire\Admin\ProjectHub\BoardIndex;
+use App\Livewire\Admin\ProjectHub\BoardShow;
+use Illuminate\Support\Facades\Route;
 
-// ✅ alle Routen hier sind geschützt durch auth:admin
-Route::get('/dashboard', fn () => view('backend.admin.dashboard'))->name('dashboard');
+Route::get('/dashboard', fn () => view('backend.admin.dashboard'))
+    ->name('dashboard');
 
-Route::get('/admin/customers', \App\Livewire\Backend\Admin\Customer\CustomersTable::class)->name('admin.customers.index');
+Route::get('/drive', \App\Livewire\Backend\Drive\FileManager::class)
+    ->name('drive');
 
+Route::get('/drive/download/{file}', \App\Http\Controllers\DriveDownloadController::class)
+    ->name('drive.download');
 
+Route::get('/drive/stream/{file}', \App\Http\Controllers\DriveStreamController::class)
+    ->name('drive.stream');
 
+Route::get('/projecthub', BoardIndex::class)
+    ->name('projecthub.index');
 
-    Route::get('/admin/impersonate/{customer}', [ImpersonateController::class, 'start'])
-        ->name('impersonate.start');
+Route::get('/projecthub/{board}', BoardShow::class)
+    ->name('projecthub.show');
 
-    Route::get('/admin/impersonate/stop', [ImpersonateController::class, 'stop'])
-        ->name('impersonate.stop');
+Route::get('/customers', \App\Livewire\Backend\Admin\Customer\CustomersTable::class)
+    ->name('customers.index');
 
-// System
-        Route::get('settings', \App\Livewire\Backend\Admin\System\SettingsForm::class)
+Route::get('/impersonate/{customer}', [ImpersonateController::class, 'start'])
+    ->name('impersonate.start');
+
+Route::get('/impersonate/stop', [ImpersonateController::class, 'stop'])
+    ->name('impersonate.stop');
+
+Route::get('/settings', \App\Livewire\Backend\Admin\System\SettingsForm::class)
     ->name('settings');
 
-// Kunden Feedback
-Route::get('customers/feedback', \App\Livewire\Backend\Admin\Customer\FeedbackManager::class)
-    ->name('customer.feedback');    
+Route::get('/customers/feedback', \App\Livewire\Backend\Admin\Customer\FeedbackManager::class)
+    ->name('customers.feedback');
