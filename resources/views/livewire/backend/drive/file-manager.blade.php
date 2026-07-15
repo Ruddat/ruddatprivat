@@ -48,8 +48,7 @@
 
                 <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
                     @forelse ($folders as $folder)
-                        <div
-                            class="flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:bg-gray-50">
+                        <div class="flex items-center justify-between rounded-xl border border-gray-200 p-4 hover:bg-gray-50">
                             <button wire:click="openFolder({{ $folder->id }})" class="text-left">
                                 <div class="font-semibold text-gray-900">📁 {{ $folder->name }}</div>
                                 <div class="text-xs text-gray-500">{{ $folder->created_at?->format('d.m.Y H:i') }}</div>
@@ -61,8 +60,7 @@
                             </button>
                         </div>
                     @empty
-                        <div
-                            class="rounded-xl border border-dashed border-gray-300 p-5 text-sm text-gray-500 md:col-span-2">
+                        <div class="rounded-xl border border-dashed border-gray-300 p-5 text-sm text-gray-500 md:col-span-2">
                             Keine Unterordner vorhanden.
                         </div>
                     @endforelse
@@ -70,15 +68,21 @@
             </div>
 
             <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                <h2 class="mb-4 text-lg font-semibold text-gray-900">Dateien</h2>
+                <div class="mb-4 flex items-center justify-between gap-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Dateien</h2>
+                    @if ($files->total() > 0)
+                        <span class="text-sm text-gray-500">
+                            {{ $files->firstItem() }}–{{ $files->lastItem() }} von {{ $files->total() }}
+                        </span>
+                    @endif
+                </div>
 
                 <div class="mb-5 flex flex-col gap-3 rounded-xl border border-dashed border-gray-300 p-4">
                     <input wire:model="upload" type="file" class="block w-full text-sm text-gray-700">
                     @error('upload')
                         <div class="text-sm text-red-600">{{ $message }}</div>
                     @enderror
-                    <div wire:loading wire:target="upload" class="text-sm text-gray-500">Upload wird vorbereitet...
-                    </div>
+                    <div wire:loading wire:target="upload" class="text-sm text-gray-500">Upload wird vorbereitet...</div>
                     <button wire:click="saveUpload" wire:loading.attr="disabled"
                         class="w-fit rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50">
                         Datei hochladen
@@ -97,7 +101,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-100 bg-white">
                             @forelse ($files as $file)
-                                <tr>
+                                <tr wire:key="drive-file-{{ $file->id }}">
                                     <td class="px-4 py-3 font-medium text-gray-900">{{ $file->original_name }}</td>
                                     <td class="px-4 py-3 text-gray-500">{{ $file->mime_type ?? 'unbekannt' }}</td>
                                     <td class="px-4 py-3 text-gray-500">{{ $file->human_size }}</td>
@@ -115,13 +119,20 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-4 py-6 text-center text-gray-500">Keine Dateien in
-                                        diesem Ordner.</td>
+                                    <td colspan="4" class="px-4 py-6 text-center text-gray-500">
+                                        Keine Dateien in diesem Ordner.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+
+                @if ($files->hasPages())
+                    <div class="mt-5">
+                        {{ $files->links() }}
+                    </div>
+                @endif
             </div>
         </div>
 
