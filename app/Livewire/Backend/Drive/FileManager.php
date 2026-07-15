@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class FileManager extends Component
 {
     use WithFileUploads;
+    use WithPagination;
 
     public ?int $currentFolderId = null;
     public string $folderName = '';
@@ -56,6 +58,7 @@ class FileManager extends Component
         }
 
         $this->currentFolderId = $folderId;
+        $this->resetPage(pageName: 'filesPage');
     }
 
     public function createFolder(): void
@@ -90,8 +93,24 @@ class FileManager extends Component
         $storedName = Str::uuid()->toString().'.'.$this->upload->getClientOriginalExtension();
         $folderPart = $this->currentFolderId ?: 'root';
         $path = "private/drive/admins/{$ownerId}/folders/{$folderPart}/{$storedName}";
+        $sourcePath = $this->upload->getRealPath();
+        $stream = fopen($sourcePath, 'rb');
 
-        Storage::disk('local')->put($path, file_get_contents($this->upload->getRealPath()));
+        if ($stream === false) {
+            session()->flash('error', 'Die Upload-Datei konnte nicht gelesen werden.');
+            return;
+        }
+
+        try {
+            $stored = Storage::disk('local')->writeStream($path, $stream);
+        } finally {
+            fclose($stream);
+        }
+
+        if (! $stored) {
+            session()->flash('error', 'Die Datei konnte nicht gespeichert werden.');
+            return;
+        }
 
         DriveFile::create([
             'owner_id' => $ownerId,
@@ -103,10 +122,11 @@ class FileManager extends Component
             'size' => $this->upload->getSize(),
             'disk' => 'local',
             'path' => $path,
-            'checksum' => hash_file('sha256', $this->upload->getRealPath()),
+            'checksum' => hash_file('sha256', $sourcePath),
         ]);
 
         $this->reset('upload');
+        $this->resetPage(pageName: 'filesPage');
         session()->flash('success', 'Datei wurde hochgeladen.');
     }
 
@@ -181,11 +201,12 @@ class FileManager extends Component
             ->where('owner_id', $this->adminId())
             ->where('folder_id', $this->currentFolderId)
             ->latest()
-            ->get();
+            ->paginate(24, ['*'], 'filesPage');
 
         $shares = DriveShare::query()
             ->where('owner_id', $this->adminId())
             ->latest()
+            ->limit(20)
             ->get();
 
         return view('livewire.backend.drive.file-manager', [
