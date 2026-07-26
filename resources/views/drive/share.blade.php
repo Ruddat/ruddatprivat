@@ -921,10 +921,6 @@
             return;
         }
 
-        document.querySelectorAll('movi-player').forEach((existingPlayer) => {
-            existingPlayer.remove();
-        });
-
         button.disabled = true;
 
         button.innerHTML = `
