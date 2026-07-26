@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CrossOriginIsolation;
 use App\Http\Middleware\TrackBotAccess;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -42,6 +43,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+             CrossOriginIsolation::class,
         ]);
 
         $middleware->group('api', [
