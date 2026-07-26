@@ -55,7 +55,7 @@ class DriveChunkUploadController extends Controller
 
         $validated = $request->validate([
             'upload_id' => ['required', 'string', 'max:120'],
-            'chunk' => ['required', 'file', 'max:102400'], // 100 MB pro Chunk
+            'chunk' => ['required', 'file', 'max:102400'],
             'chunk_index' => ['required', 'integer', 'min:0'],
             'total_chunks' => ['required', 'integer', 'min:1'],
             'file_name' => ['required', 'string', 'max:255'],
@@ -100,27 +100,53 @@ class DriveChunkUploadController extends Controller
         $extension = pathinfo($validated['file_name'], PATHINFO_EXTENSION);
         $storedName = Str::uuid()->toString().($extension ? '.'.$extension : '');
         $finalPath = "private/drive/admins/{$share->owner_id}/shares/{$share->id}/folders/{$targetFolder->id}/{$storedName}";
-
         $absoluteFinalPath = Storage::disk('local')->path($finalPath);
 
         if (! is_dir(dirname($absoluteFinalPath))) {
             mkdir(dirname($absoluteFinalPath), 0775, true);
         }
 
-        $output = fopen($absoluteFinalPath, 'ab');
+        $output = fopen($absoluteFinalPath, 'wb');
 
-        for ($i = 0; $i < $totalChunks; $i++) {
-            $absoluteChunkPath = Storage::disk('local')->path("{$tmpDir}/chunk_{$i}");
-            $input = fopen($absoluteChunkPath, 'rb');
+        abort_if($output === false, 500, 'Zieldatei konnte nicht geöffnet werden.');
 
-            stream_copy_to_stream($input, $output);
+        try {
+            for ($i = 0; $i < $totalChunks; $i++) {
+                $absoluteChunkPath = Storage::disk('local')->path("{$tmpDir}/chunk_{$i}");
+                $input = fopen($absoluteChunkPath, 'rb');
 
-            fclose($input);
+                abort_if($input === false, 500, "Chunk {$i} konnte nicht geöffnet werden.");
+
+                try {
+                    stream_copy_to_stream($input, $output);
+                } finally {
+                    fclose($input);
+                }
+            }
+        } finally {
+            fclose($output);
         }
 
-        fclose($output);
-
         Storage::disk('local')->deleteDirectory($tmpDir);
+
+        $checksum = hash_file('sha256', $absoluteFinalPath);
+
+        $duplicate = DriveFile::query()
+            ->where('owner_id', $share->owner_id)
+            ->where('folder_id', $targetFolder->id)
+            ->where('size', (int) $validated['file_size'])
+            ->where('checksum', $checksum)
+            ->first();
+
+        if ($duplicate) {
+            Storage::disk('local')->delete($finalPath);
+
+            return response()->json([
+                'done' => true,
+                'duplicate' => true,
+                'file_id' => $duplicate->id,
+            ]);
+        }
 
         $driveFile = DriveFile::create([
             'owner_id' => $share->owner_id,
@@ -133,11 +159,12 @@ class DriveChunkUploadController extends Controller
             'size' => $validated['file_size'],
             'disk' => 'local',
             'path' => $finalPath,
-            'checksum' => hash_file('sha256', $absoluteFinalPath),
+            'checksum' => $checksum,
         ]);
 
         return response()->json([
             'done' => true,
+            'duplicate' => false,
             'file_id' => $driveFile->id,
         ]);
     }
