@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DriveFile;
 use App\Models\DriveFolder;
 use App\Models\DriveShare;
+use App\Support\RangeFileResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -140,14 +141,27 @@ class DriveShareController extends Controller
         ]);
 
         $targetFolderId = $validated['folder_id'] ?? $share->folder_id;
-
         $targetFolder = DriveFolder::query()->find($targetFolderId);
 
         abort_unless($targetFolder && $this->shareCanAccessFolder($share, $targetFolder), 403);
 
         $uploadedFile = $validated['file'];
         $ownerId = $share->owner_id;
-        $storedName = Str::uuid()->toString().'.'.$uploadedFile->getClientOriginalExtension();
+        $checksum = hash_file('sha256', $uploadedFile->getRealPath());
+
+        $duplicate = DriveFile::query()
+            ->where('owner_id', $ownerId)
+            ->where('folder_id', $targetFolder->id)
+            ->where('size', $uploadedFile->getSize())
+            ->where('checksum', $checksum)
+            ->first();
+
+        if ($duplicate) {
+            return back()->with('success', 'Die Datei ist bereits vorhanden und wurde nicht erneut gespeichert.');
+        }
+
+        $extension = $uploadedFile->getClientOriginalExtension();
+        $storedName = Str::uuid()->toString().($extension !== '' ? '.'.$extension : '');
         $path = "private/drive/admins/{$ownerId}/shares/{$share->id}/folders/{$targetFolder->id}/{$storedName}";
 
         Storage::disk('local')->put($path, file_get_contents($uploadedFile->getRealPath()));
@@ -163,7 +177,7 @@ class DriveShareController extends Controller
             'size' => $uploadedFile->getSize(),
             'disk' => 'local',
             'path' => $path,
-            'checksum' => hash_file('sha256', $uploadedFile->getRealPath()),
+            'checksum' => $checksum,
         ]);
 
         return back()->with('success', 'Datei wurde hochgeladen.');
@@ -182,7 +196,7 @@ class DriveShareController extends Controller
         return Storage::disk($file->disk)->download($file->path, $file->original_name);
     }
 
-    public function stream(string $token, DriveFile $file)
+    public function stream(Request $request, string $token, DriveFile $file)
     {
         $share = DriveShare::query()
             ->where('token', $token)
@@ -192,10 +206,11 @@ class DriveShareController extends Controller
         abort_unless($this->shareCanAccessFile($share, $file), 403);
         abort_unless(Storage::disk($file->disk)->exists($file->path), 404);
 
-        return response()->file(Storage::disk($file->disk)->path($file->path), [
-            'Content-Type' => $file->mime_type ?: 'application/octet-stream',
-            'Cache-Control' => 'private, max-age=0, must-revalidate',
-        ]);
+        return RangeFileResponse::make(
+            $request,
+            Storage::disk($file->disk)->path($file->path),
+            $file->mime_type ?: 'application/octet-stream'
+        );
     }
 
     public function destroy(Request $request, string $token, DriveFile $file)
