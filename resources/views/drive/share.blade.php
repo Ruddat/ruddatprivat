@@ -782,12 +782,32 @@
                                             class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
                                     </a>
                                 @elseif ($isVideo)
-                                    @if ($isMov)
-                                        <movi-player src="{{ $streamUrl }}" controls
-                                            class="block h-full w-full bg-black"
-                                            style="width: 100%; height: 100%; min-height: 220px; background: #000;">
-                                        </movi-player>
-                                    @else
+@if ($isMov)
+    <div
+        class="mov-player-placeholder relative flex h-full w-full items-center justify-center overflow-hidden bg-black"
+        data-stream-url="{{ $streamUrl }}">
+
+        <div
+            class="absolute inset-0 bg-gradient-to-br from-slate-950 via-indigo-950/40 to-fuchsia-950/40">
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center text-center">
+            <button
+                type="button"
+                class="mov-player-load flex h-20 w-20 items-center justify-center rounded-full border border-white/20 bg-white/10 text-3xl text-white shadow-2xl backdrop-blur transition hover:scale-105 hover:bg-indigo-500">
+                ▶
+            </button>
+
+            <div class="mt-4 text-sm font-bold text-white">
+                Video laden
+            </div>
+
+            <div class="mt-1 text-xs text-slate-400">
+                Wird erst beim Anklicken geöffnet
+            </div>
+        </div>
+    </div>
+@else
                                         <video controls preload="metadata"
                                             class="h-full w-full bg-black object-contain">
                                             <source src="{{ $streamUrl }}" type="{{ $mime }}">
@@ -880,6 +900,52 @@
             @endif
         </section>
     </main>
+
+<script>
+    document.addEventListener('click', (event) => {
+        const button = event.target.closest('.mov-player-load');
+
+        if (!button) {
+            return;
+        }
+
+        const placeholder = button.closest('.mov-player-placeholder');
+
+        if (!placeholder) {
+            return;
+        }
+
+        const streamUrl = placeholder.dataset.streamUrl;
+
+        if (!streamUrl) {
+            return;
+        }
+
+        document.querySelectorAll('movi-player').forEach((existingPlayer) => {
+            existingPlayer.remove();
+        });
+
+        button.disabled = true;
+
+        button.innerHTML = `
+            <span class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-white/30 border-t-white"></span>
+        `;
+
+        const player = document.createElement('movi-player');
+
+        player.setAttribute('src', streamUrl);
+        player.setAttribute('controls', '');
+        player.className = 'block h-full w-full bg-black';
+        player.style.width = '100%';
+        player.style.height = '100%';
+        player.style.minHeight = '220px';
+        player.style.background = '#000';
+
+        placeholder.replaceWith(player);
+    });
+</script>
+
+
 </body>
 
 </html>
