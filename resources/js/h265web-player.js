@@ -12,9 +12,9 @@ const isMovSource = (element) => {
     return mime === 'video/quicktime' || /\.mov(?:$|[?#])/i.test(src);
 };
 
-const browserSupportsMov = () => {
+const browserProbablySupportsMov = () => {
     const probe = document.createElement('video');
-    return probe.canPlayType('video/quicktime') !== '';
+    return probe.canPlayType('video/quicktime') === 'probably';
 };
 
 const loadSdk = () => {
@@ -67,8 +67,20 @@ const showFallback = (container, message) => {
     container.append(notice);
 };
 
+const releaseContainer = (container) => {
+    const player = activePlayers.get(container);
+
+    try {
+        player?.release?.();
+    } catch (_) {
+        // SDK cleanup only.
+    }
+
+    activePlayers.delete(container);
+};
+
 const initializeMovPlayer = async (video) => {
-    if (video.dataset.h265webReady === 'true' || browserSupportsMov()) {
+    if (video.dataset.h265webReady === 'true' || browserProbablySupportsMov()) {
         return;
     }
 
@@ -93,15 +105,9 @@ const initializeMovPlayer = async (video) => {
         const createPlayer = await loadSdk();
         const player = createPlayer();
 
-        player.on_ready_show_done_callback = () => {
-            try {
-                player.play();
-            } catch (_) {
-                // Autoplay may be blocked. The SDK controls remain usable.
-            }
-        };
-
+        player.on_ready_show_done_callback = () => {};
         player.video_probe_callback = () => {};
+
         player.build({
             player_id: container.id,
             base_url: SDK_BASE_URL,
@@ -116,8 +122,8 @@ const initializeMovPlayer = async (video) => {
             readframe_multi_times: -1,
             ignore_audio: false,
         });
-        player.load_media(mediaUrl);
 
+        player.load_media(mediaUrl);
         activePlayers.set(container, player);
     } catch (error) {
         console.error(error);
@@ -138,20 +144,29 @@ export const initializeH265WebPlayers = (root = document) => {
 export const releaseH265WebPlayers = (root = document) => {
     const scope = root instanceof Element || root instanceof Document ? root : document;
 
-    scope.querySelectorAll('[data-h265web-container]').forEach((container) => {
-        const player = activePlayers.get(container);
-
-        try {
-            player?.release?.();
-        } catch (_) {
-            // SDK cleanup only.
-        }
-
-        activePlayers.delete(container);
-    });
+    scope.querySelectorAll('[data-h265web-container]').forEach(releaseContainer);
 };
 
-document.addEventListener('DOMContentLoaded', () => initializeH265WebPlayers());
+const cleanupObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.removedNodes.forEach((node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+
+            if (node.matches('[data-h265web-container]')) {
+                releaseContainer(node);
+            }
+
+            node.querySelectorAll?.('[data-h265web-container]').forEach(releaseContainer);
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    cleanupObserver.observe(document.body, { childList: true, subtree: true });
+    initializeH265WebPlayers();
+});
 document.addEventListener('livewire:navigated', () => initializeH265WebPlayers());
 document.addEventListener('drive-viewer:opened', (event) => {
     initializeH265WebPlayers(event.detail?.root ?? document);
