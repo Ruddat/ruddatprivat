@@ -229,6 +229,7 @@ const initializeMovPlayer = async (video) => {
     if (
         playerIsStarting
         || video.dataset.h265webReady === 'true'
+        || video.dataset.moviPlayerReady === 'true'
         || browserProbablySupportsMov()
     ) {
         return;

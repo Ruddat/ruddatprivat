@@ -902,79 +902,184 @@
     </main>
 
 <script>
-    document.addEventListener('click', async (event) => {
-        const button = event.target.closest('.mov-player-load');
+    document.addEventListener('DOMContentLoaded', () => {
+        let playerLoadingInProgress = false;
 
-        if (!button) {
-            return;
-        }
+        document.addEventListener('click', async (event) => {
+            const button = event.target.closest('.mov-player-load');
 
-        const placeholder = button.closest('.mov-player-placeholder');
+            if (!button || playerLoadingInProgress) {
+                return;
+            }
 
-        if (!placeholder) {
-            return;
-        }
+            const placeholder = button.closest('.mov-player-placeholder');
 
-        const streamUrl = placeholder.dataset.streamUrl;
+            if (!placeholder) {
+                return;
+            }
 
-        if (!streamUrl) {
-            return;
-        }
+            const streamUrl = placeholder.dataset.streamUrl;
 
-        button.disabled = true;
+            if (!streamUrl) {
+                return;
+            }
 
-        button.innerHTML = `
-            <span
-                class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-white/30 border-t-white">
-            </span>
-        `;
+            // Verhindere mehrfache gleichzeitige Aufrufe
+            playerLoadingInProgress = true;
+            button.disabled = true;
 
-        try {
-            /*
-             * Warten, bis <movi-player> vom Player-Script registriert wurde.
-             */
-            await customElements.whenDefined('movi-player');
-
-            /*
-             * Nicht document.createElement('movi-player') verwenden.
-             * Der Movi-Player muss über den HTML-Parser erzeugt werden.
-             */
-            const template = document.createElement('template');
-
-            template.innerHTML = `
-                <movi-player
-                    src="${escapeHtmlAttribute(streamUrl)}"
-                    controls
-                    class="block h-full w-full bg-black"
-                    style="
-                        width: 100%;
-                        height: 100%;
-                        min-height: 220px;
-                        background: #000;
-                    ">
-                </movi-player>
+            button.innerHTML = `
+                <span
+                    class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-white/30 border-t-white">
+                </span>
             `;
 
-            const player = template.content.firstElementChild;
+            try {
+                // Warte ein wenig, damit die Player-Scripts geladen sind
+                await new Promise(resolve => setTimeout(resolve, 300));
 
-            if (!player) {
-                throw new Error('Movi-Player konnte nicht erzeugt werden.');
+                /*
+                 * Warten, bis <movi-player> vom Player-Script registriert wurde.
+                 */
+                await customElements.whenDefined('movi-player');
+
+                // Zusätzliche Sicherheit: Prüfe ob das Element noch im DOM ist
+                if (!placeholder.isConnected) {
+                    return;
+                }
+
+                /*
+                 * Nicht document.createElement('movi-player') verwenden.
+                 * Der Movi-Player muss über den HTML-Parser erzeugt werden.
+                 */
+                const template = document.createElement('template');
+
+                template.innerHTML = `
+                    <movi-player
+                        src="${escapeHtmlAttribute(streamUrl)}"
+                        controls
+                        class="block h-full w-full bg-black"
+                        style="
+                            width: 100%;
+                            height: 100%;
+                            min-height: 220px;
+                            background: #000;
+                        "
+                        data-movi-player-container="true">
+                    </movi-player>
+                `;
+
+                const player = template.content.firstElementChild;
+
+                if (!player) {
+                    throw new Error('Movi-Player konnte nicht erzeugt werden.');
+                }
+
+                // Markiere als movi-player bereit, um Konflikte zu vermeiden
+                const videoElements = placeholder.querySelectorAll('video');
+                videoElements.forEach(video => {
+                    if (video instanceof HTMLVideoElement) {
+                        video.dataset.moviPlayerReady = 'true';
+                    }
+                });
+
+                // Player Event-Handler hinzufügen für ordnungsgemäße Bereinigung
+                player.addEventListener('loadstart', () => {
+                    console.debug('[Movi Player] Video wird geladen...');
+                });
+
+                player.addEventListener('error', (event) => {
+                    console.error('[Movi Player] Fehler beim Laden:', event);
+                });
+
+                // Cleanup bei Visibility Change (Tab wechseln, etc.)
+                const handleVisibilityChange = () => {
+                    if (document.hidden && player && player.pause) {
+                        player.pause();
+                        console.debug('[Movi Player] Pausiert wegen Tab-Wechsel');
+                    }
+                };
+
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+
+                // Cleanup bei Page Unload
+                const handleBeforeUnload = () => {
+                    if (player && player.pause) {
+                        player.pause();
+                    }
+                    if (player && player.stop) {
+                        player.stop();
+                    }
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                };
+
+                window.addEventListener('beforeunload', handleBeforeUnload, { once: true });
+
+                // ESC-Taste Handler für Player
+                const handleEscapeKey = (event) => {
+                    if (event.key === 'Escape' && player) {
+                        if (player.pause) {
+                            player.pause();
+                        }
+                        if (player.stop) {
+                            player.stop();
+                        }
+                        console.debug('[Movi Player] Gestoppt mit ESC-Taste');
+                    }
+                };
+
+                document.addEventListener('keydown', handleEscapeKey);
+
+                // Player stoppen bei Klick außerhalb
+                const handleOutsideClick = (event) => {
+                    if (player && !player.contains(event.target)) {
+                        // Nur pausieren bei Klick weit weg vom Player
+                        const rect = player.getBoundingClientRect();
+                        const clickX = event.clientX;
+                        const clickY = event.clientY;
+
+                        const isOutside = (
+                            clickX < rect.left - 50 ||
+                            clickX > rect.right + 50 ||
+                            clickY < rect.top - 50 ||
+                            clickY > rect.bottom + 50
+                        );
+
+                        if (isOutside && player.pause) {
+                            player.pause();
+                            console.debug('[Movi Player] Pausiert wegen außerhalb Klick');
+                        }
+                    }
+                };
+
+                // Nach kurzer Verzögerung den Outside-Click Handler hinzufügen
+                setTimeout(() => {
+                    document.addEventListener('click', handleOutsideClick);
+                }, 1000);
+
+                placeholder.replaceWith(player);
+            } catch (error) {
+                console.error('[Movi Player]', error);
+
+                button.disabled = false;
+                button.innerHTML = '▶';
+
+                const message = placeholder.querySelector('.mov-player-error');
+
+                if (message) {
+                    message.textContent = 'Video konnte nicht geladen werden.';
+                    message.classList.remove('hidden');
+                } else {
+                    // Erstelle Fehlermeldung wenn nicht vorhanden
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'mov-player-error mt-2 text-xs text-red-400';
+                    errorDiv.textContent = 'Video konnte nicht geladen werden.';
+                    button.parentNode.appendChild(errorDiv);
+                }
+            } finally {
+                playerLoadingInProgress = false;
             }
-
-            placeholder.replaceWith(player);
-        } catch (error) {
-            console.error('[Movi Player]', error);
-
-            button.disabled = false;
-            button.innerHTML = '▶';
-
-            const message = placeholder.querySelector('.mov-player-error');
-
-            if (message) {
-                message.textContent = 'Video konnte nicht geladen werden.';
-                message.classList.remove('hidden');
-            }
-        }
+        });
     });
 
     function escapeHtmlAttribute(value) {

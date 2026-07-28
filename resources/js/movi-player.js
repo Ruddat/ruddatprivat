@@ -41,6 +41,7 @@ const replaceWithMoviPlayer = (video) => {
 
     if (
         video.dataset.moviPlayerReady === 'true'
+        || video.dataset.h265webReady === 'true'
         || activePlayers.has(video)
     ) {
         return;
@@ -97,7 +98,7 @@ const replaceWithMoviPlayer = (video) => {
     });
 };
 
-export const initializeH265WebPlayers = (root = document) => {
+export const initializeMoviPlayers = (root = document) => {
     const scope = root instanceof Element || root instanceof Document
         ? root
         : document;
@@ -116,7 +117,7 @@ export const initializeH265WebPlayers = (root = document) => {
     });
 };
 
-export const releaseH265WebPlayers = (root = document) => {
+export const releaseMoviPlayers = (root = document) => {
     const scope = root instanceof Element || root instanceof Document
         ? root
         : document;
@@ -135,21 +136,21 @@ export const releaseH265WebPlayers = (root = document) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    initializeH265WebPlayers();
+    initializeMoviPlayers();
 });
 
 document.addEventListener('livewire:navigated', () => {
-    initializeH265WebPlayers();
+    initializeMoviPlayers();
 });
 
 document.addEventListener('drive-viewer:opened', (event) => {
-    initializeH265WebPlayers(
+    initializeMoviPlayers(
         event.detail?.root ?? document,
     );
 });
 
 document.addEventListener('drive-viewer:cleanup', (event) => {
-    releaseH265WebPlayers(
+    releaseMoviPlayers(
         event.detail?.root ?? document,
     );
 });
@@ -160,6 +161,6 @@ document.addEventListener('livewire:init', () => {
     }
 
     Livewire.hook('morph.updated', ({ el }) => {
-        initializeH265WebPlayers(el);
+        initializeMoviPlayers(el);
     });
 });
