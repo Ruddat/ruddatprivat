@@ -6,6 +6,8 @@ use App\Imports\OpeningBalancePreviewImport;
 use App\Models\Account;
 use App\Models\Entry;
 use App\Models\FiscalYear;
+use App\Models\Tenant;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -31,8 +33,22 @@ class OpeningBalanceForm extends Component
 
     public function mount()
     {
-        $tenant = \App\Models\Tenant::where('is_current', true)->first();
+        $customerId = Auth::guard('customer')->id();
+
+        $tenant = Tenant::where('customer_id', $customerId)
+            ->where('is_current', true)
+            ->first()
+            ?? Tenant::where('customer_id', $customerId)
+                ->orderBy('name')
+                ->first();
+
         $this->tenantId = $tenant?->id;
+
+        if (! $this->tenantId) {
+            $this->fiscalYearId = null;
+            $this->balances = [];
+            return;
+        }
 
         $fy = FiscalYear::current($this->tenantId);
         $this->fiscalYearId = $fy?->id;
@@ -46,7 +62,12 @@ class OpeningBalanceForm extends Component
 
     public function save()
     {
-        $fiscalYear = FiscalYear::findOrFail($this->fiscalYearId);
+        if (! $this->tenantId || ! $this->fiscalYearId) {
+            session()->flash('error', 'Kein Mandant oder Geschäftsjahr ausgewählt.');
+            return;
+        }
+
+        $fiscalYear = FiscalYear::where('tenant_id', $this->tenantId)->findOrFail($this->fiscalYearId);
 
         $ebk = Account::firstOrCreate(
             ['tenant_id' => $this->tenantId, 'number' => '9000'],
@@ -94,7 +115,7 @@ class OpeningBalanceForm extends Component
                 continue;
             }
 
-            $acc = Account::find($accountId);
+            $acc = Account::where('tenant_id', $this->tenantId)->find($accountId);
             if (! $acc) {
                 continue;
             }
@@ -128,6 +149,11 @@ class OpeningBalanceForm extends Component
 
     public function import()
     {
+        if (! $this->tenantId) {
+            session()->flash('error', 'Kein Mandant ausgewählt.');
+            return;
+        }
+
         $this->validate(['file' => 'required|file|mimes:xlsx,csv']);
 
         $preview = Excel::toCollection(new OpeningBalancePreviewImport, $this->file->getRealPath())->first();
@@ -220,7 +246,9 @@ class OpeningBalanceForm extends Component
 
     public function render()
     {
-        $accounts = Account::where('tenant_id', $this->tenantId)->orderBy('number')->get();
+        $accounts = $this->tenantId
+            ? Account::where('tenant_id', $this->tenantId)->orderBy('number')->get()
+            : collect();
 
         return view('livewire.backend.bookkeeping.opening-balance-form', compact('accounts'))
                     ->extends('backend.customer.layouts.app')
