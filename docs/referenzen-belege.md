@@ -13,6 +13,9 @@ Interne Dokumente zu Vertrieb/Akquise wurden **nicht** als Quelle verwendet.
 | Kein Merkmal **„Betrieb produktiver Anwendungen“** gesetzt | Erst zuordnen, wenn der Livebetrieb bestätigt ist. |
 | Screenshot **Legacy-Startseite** | Zeigt einen echten Restaurantnamen mit Gericht und Preis aus dem Datenbestand. Ggf. ersetzen. |
 | Screenshot **Stadtschrei** | Nachrichtenticker abgeschnitten; Veranstaltungs- und Wetter-Screenshots verworfen (fremde Inhalte bzw. leere Daten). |
+| **Veröffentlichungsrechte** ZwergiJump, Fristenfrei, Zwergi Chat/Help, RäumExpress | Als Eigenprojekte angenommen – bitte bestätigen. |
+| Screenshots **RäumExpress** und **Zwergi Chat/Help** fehlen | RäumExpress-Startseite wirbt mit „24/7 Service“ und Platzhalter-Telefonnummer; Zwergi lokal ohne gebaute Assets. |
+| Screenshot **ZwergiJump-Katalog** verworfen | zeigt einen Testeintrag. |
 
 ## Portal-Core (`LieferWiki`)
 
@@ -68,6 +71,57 @@ Interne Dokumente zu Vertrieb/Akquise wurden **nicht** als Quelle verwendet.
 | PDF-Erzeugung (DomPDF) | `app/Services/OwnReceipts.php` |
 | Offene Punkte (E-Mail-Bestätigung, Passwort-Reset, Bankimport) | `docs/PROJEKTSTAND.md` |
 | **Nicht** aufgenommen: ZUGFeRD | nur in Demo-Klassen verwendet |
+
+## ZwergiJump (`zwergijump`)
+
+| Aussage | Beleg |
+|---|---|
+| 222 Migrationen, 95 Models, 17 Jobs | Verzeichnisse `database/migrations`, `app/Models`, `app/Jobs` |
+| Fachliche Domänen (Booking, Payment, Payout, Billing, Contract, Franchise, Inventory, Location, ContentSafety, VendorQuality, Seo) | `app/Domain/*` |
+| Mandanten-Auflösung, Rollen | `app/Http/Middleware/ResolveTenant.php`, `RoleMiddleware.php`, Guard `staff` |
+| Buchungsfristen, Auto-Bestätigung, Bewertungen, Abrechnung, Ferien, Landingpages | `routes/console.php` (`bookings:*`, `reviews:*`, `settlements:*`, `holidays:import`, `landing-pages:*`) |
+| PayPal über austauschbare Schnittstelle | `app/Domain/Payment/Contracts/PaymentProviderInterface.php`, `Providers/PaypalProvider.php` |
+| Kalenderimport | `app/Jobs/CalendarSyncJob.php` (`CalendarImportService`) |
+| Bild-/Inhaltsprüfung, Qualitätsbewertung, IndexNow | `ImageSafetyService`, `ContentSafetyService`, `RecalculateTenantQualityScore`, `SendIndexNowJob` |
+| Katalog-API für LieferWiki mit API-Schlüssel und Test | `routes/api.php`, `RequireLieferWikiApiKey`, `CatalogResourceApiTest` |
+
+## Fristenfrei (`fristenfrei`)
+
+| Aussage | Beleg |
+|---|---|
+| KI-Analyse Text und Bild über OpenRouter | `OpenRouterDocumentAnalyzer`, `OpenRouterVisionDocumentAnalyzer`, `AnalyzeDocumentJob` |
+| PDF-Textextraktion | `smalot/pdfparser` |
+| Fristen, Erinnerungen, Aufgaben, Antwortvorlagen mit Tonalität | Models `DocumentDeadline*`, `DocumentTask`, `DocumentReplyTemplate*` |
+| Terminierter Versand per E-Mail mit Kopie | `SendScheduledDocumentReplyDeliveryJob`, `document-replies:send-due` |
+| Tarife, Nutzungszähler, Guthaben, Abos, PayPal | `BillingPlan*`, `UsageCounter`, `UserCreditGrant`, `UserSubscription`, `app/Domain/Payments/PayPal` |
+| Protokollierte Impersonation | `ImpersonationLog` |
+| Status „geplanter Funktionsumfang umgesetzt“ | letzter Commit 28.05.2026 |
+| **Nicht** aufgenommen: Kalenderexport | nicht eindeutig belegbar |
+
+## Zwergi Chat & Zwergi Help (`zwergichat`)
+
+| Aussage | Beleg |
+|---|---|
+| Einbettbares Widget, Domain-Freigabe, Nutzungsanalyse | `public/widget/widget.js`, `routes/api.php` (`/widget/*`), `WidgetDomain`, `WidgetAnalytic` |
+| Bot mit Trainingsantworten, Lernsignalen, Bewertungen | `BotTrainingAnswer`, `BotLearningSignal`, `ChatRating` |
+| KI-Rückfallebene | `app/Services/Bot/AiFallbackService.php` (OpenRouter) |
+| Hilfe-Center mit Kategorien, Tags, Suche, Feedback | `Help*`-Models, `Frontend/ZwergiHelp/HelpController` |
+| Mandanten, Tarife, Rechnungen | `Tenant`, `PricingPlan`, `Subscription`, `Invoice` |
+| Gedrosselte Chat-API | `throttle:chat` in `routes/api.php` |
+| Frühe Entwicklungsphase | 8 Commits, letzter 21.12.2025 |
+| **Nicht** aufgenommen: Live-Chat mit menschlicher Übernahme | nicht eindeutig belegbar |
+
+## RäumExpress (`raumexpress`)
+
+| Aussage | Beleg |
+|---|---|
+| Anfragen mit Objektart und Räumen, Preisregeln | `CustomerRequest`, `CustOrderRoom`, `PropertyType`, `PricingRule` |
+| Franchise-Bewerbung, Onboarding mit Unterschrift, Rechtsdokumente | `FranchiseSignup`, `OnboardingWizard`, `SignaturePad`, `VendorLegalAcceptance` |
+| Teams, Mitarbeitende, Kalender, Einsatzplanung | `TeamsIndex`, `MitarbeiterIndex`, `CalendarPage`, `Schedule` |
+| Angebote/Aufträge mit PDF | `OfferTable`, `OrderCreate`, `OrderPdfController` |
+| Schulungshandbuch mit Quiz und Fortschritt | `Handbook*`-Models und Komponenten |
+| Rollen, Berechtigungen, Audit-Log | `Role`, `Permission`, `VendorAuditLog` |
+| Prototyp | kein Git-Repository, letzte Änderung September 2025, nur Beispieltests |
 
 ## Screenshots
 

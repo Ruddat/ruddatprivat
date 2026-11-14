@@ -3,6 +3,27 @@
 @section('title', 'Über RuddatTech – persönliche technische Betreuung | RuddatTech')
 @section('meta_description', 'RuddatTech ist der technische Dienstleister von Ingo Ruddat: Wartung und Betreuung individueller Geschäftsanwendungen mit direktem Ansprechpartner und nachvollziehbarer Arbeitsweise.')
 
+@push('structured_data')
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'AboutPage',
+                    '@id' => route('about') . '#webpage',
+                    'url' => route('about'),
+                    'name' => 'Über RuddatTech',
+                    'inLanguage' => 'de-DE',
+                    'isPartOf' => ['@id' => \App\Support\Site\StructuredData::websiteId()],
+                    'about' => ['@id' => \App\Support\Site\StructuredData::organizationId()],
+                    'mainEntity' => ['@id' => \App\Support\Site\StructuredData::founderId()],
+                ],
+                \App\Support\Site\StructuredData::breadcrumbs(['Startseite' => route('home'), 'Über RuddatTech' => route('about')]),
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
+    </script>
+@endpush
+
 @section('content')
     @include('site.partials.page-hero', [
         'eyebrow' => 'Über RuddatTech',

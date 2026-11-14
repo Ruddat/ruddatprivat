@@ -44,6 +44,10 @@ return [
         'endpoint' => env('SEVEN_ENDPOINT', 'https://gateway.seven.io/api/sms'),
     ],
 
+    'indexnow' => [
+        'key' => env('INDEXNOW_KEY'),
+    ],
+
     'whatsapp' => [
         'token' => env('WHATSAPP_ACCESS_TOKEN'),
     ],

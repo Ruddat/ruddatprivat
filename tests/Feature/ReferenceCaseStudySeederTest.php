@@ -12,7 +12,10 @@ class ReferenceCaseStudySeederTest extends TestCase
 {
     use RefreshDatabase;
 
-    private const SLUGS = ['justdeliver-4', 'justdeliver-legacy-modernisierung', 'portal-core', 'belegkalle'];
+    private const SLUGS = [
+        'justdeliver-4', 'justdeliver-legacy-modernisierung', 'portal-core', 'belegkalle',
+        'zwergijump', 'fristenfrei', 'zwergi-chat-help', 'raeumexpress',
+    ];
 
     protected function setUp(): void
     {
@@ -20,12 +23,12 @@ class ReferenceCaseStudySeederTest extends TestCase
         Storage::fake('public');
     }
 
-    public function test_seeds_four_unpublished_case_studies(): void
+    public function test_seeds_unpublished_case_studies(): void
     {
         $this->seed(ReferenceCaseStudySeeder::class);
 
         $items = PortfolioItem::whereIn('slug', self::SLUGS)->get();
-        $this->assertCount(4, $items);
+        $this->assertCount(count(self::SLUGS), $items);
         $this->assertTrue($items->every(fn ($i) => $i->is_published === false));
         $this->assertSame(3, $items->where('is_featured', true)->count());
 
@@ -76,7 +79,7 @@ class ReferenceCaseStudySeederTest extends TestCase
         $this->assertTrue(PortfolioItem::firstWhere('slug', 'belegkalle')->is_published);
         $this->assertTrue(PortfolioItem::firstWhere('slug', 'belegkalle')->is_featured);
         $this->assertFalse(PortfolioItem::firstWhere('slug', 'portal-core')->is_featured);
-        $this->assertSame(4, PortfolioItem::whereIn('slug', self::SLUGS)->count());
+        $this->assertSame(count(self::SLUGS), PortfolioItem::whereIn('slug', self::SLUGS)->count());
     }
 
     public function test_published_case_study_renders_all_sections(): void

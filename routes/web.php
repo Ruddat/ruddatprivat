@@ -69,3 +69,15 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])
 
 // Ersetzt die statische public/robots.txt (Sitemap-URL je Umgebung)
 Route::get('/robots.txt', \App\Http\Controllers\RobotsController::class)->name('robots');
+
+// Beschreibung für KI-Assistenten (llmstxt.org)
+Route::get('/llms.txt', [\App\Http\Controllers\LlmsController::class, 'index'])->name('llms');
+Route::get('/llms-full.txt', [\App\Http\Controllers\LlmsController::class, 'full'])->name('llms.full');
+
+// IndexNow-Schlüsseldatei (nur wenn INDEXNOW_KEY gesetzt ist)
+Route::get('/{indexNowKey}.txt', function (string $indexNowKey) {
+    $key = (string) config('services.indexnow.key');
+    abort_unless($key !== '' && hash_equals($key, $indexNowKey), 404);
+
+    return response($key, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+})->where('indexNowKey', '[a-zA-Z0-9-]{8,128}')->name('indexnow.key');

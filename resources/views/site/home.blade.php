@@ -7,22 +7,14 @@
     <script type="application/ld+json">
         {!! json_encode([
             '@context' => 'https://schema.org',
-            '@type' => 'ProfessionalService',
-            'name' => 'RuddatTech',
-            'description' => 'Softwarewartung und Managed Application Services für individuelle Geschäftsanwendungen.',
+            '@type' => 'WebPage',
+            '@id' => route('home') . '#webpage',
             'url' => route('home'),
-            'email' => \App\Support\Site\SiteContent::CONTACT_EMAIL,
-            'founder' => ['@type' => 'Person', 'name' => 'Ingo Ruddat'],
-            'areaServed' => ['@type' => 'Country', 'name' => 'Deutschland'],
-            'knowsAbout' => ['Softwarewartung', 'Laravel', 'PHP', 'Managed Application Services', 'Webanwendungen'],
-            'hasOfferCatalog' => [
-                '@type' => 'OfferCatalog',
-                'name' => 'Leistungen',
-                'itemListElement' => collect(\App\Support\Site\SiteContent::services())->map(fn ($s, $slug) => [
-                    '@type' => 'Offer',
-                    'itemOffered' => ['@type' => 'Service', 'name' => $s['title'], 'url' => route('leistungen.show', $slug)],
-                ])->values()->all(),
-            ],
+            'name' => 'RuddatTech – Softwarewartung & Managed Application Services für Unternehmen',
+            'inLanguage' => 'de-DE',
+            'isPartOf' => ['@id' => \App\Support\Site\StructuredData::websiteId()],
+            'about' => ['@id' => \App\Support\Site\StructuredData::organizationId()],
+            'primaryImageOfPage' => asset('brand/og-image.png'),
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
     </script>
 @endpush

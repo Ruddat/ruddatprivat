@@ -3,6 +3,35 @@
 @section('title', 'Referenzen – technische Fallstudien | RuddatTech')
 @section('meta_description', 'Technische Fallstudien von RuddatTech: umfangreiche Webanwendungen, Plattformen und Modernisierungen – mit Ausgangslage, Architektur und Betriebsaspekten.')
 
+@push('structured_data')
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'CollectionPage',
+                    '@id' => route('referenzen.index') . '#webpage',
+                    'url' => route('referenzen.index'),
+                    'name' => 'Referenzen – technische Fallstudien',
+                    'inLanguage' => 'de-DE',
+                    'isPartOf' => ['@id' => \App\Support\Site\StructuredData::websiteId()],
+                    'about' => ['@id' => \App\Support\Site\StructuredData::organizationId()],
+                    'mainEntity' => [
+                        '@type' => 'ItemList',
+                        'itemListElement' => $references->values()->map(fn ($r, $i) => [
+                            '@type' => 'ListItem',
+                            'position' => $i + 1,
+                            'url' => route('referenzen.show', $r),
+                            'name' => $r->title,
+                        ])->all(),
+                    ],
+                ],
+                \App\Support\Site\StructuredData::breadcrumbs(['Startseite' => route('home'), 'Referenzen' => route('referenzen.index')]),
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
+    </script>
+@endpush
+
 @section('content')
     @include('site.partials.page-hero', [
         'eyebrow' => 'Referenzen',

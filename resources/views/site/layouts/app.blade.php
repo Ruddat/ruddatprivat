@@ -3,6 +3,9 @@
     $pageTitle = trim($__env->yieldContent('title')) ?: 'RuddatTech – Softwarewartung & Managed Application Services';
     $pageDescription = trim($__env->yieldContent('meta_description')) ?: 'RuddatTech übernimmt Wartung, Stabilisierung und langfristige technische Betreuung individueller Geschäftsanwendungen.';
     $canonical = trim($__env->yieldContent('canonical')) ?: url()->current();
+    $ogImage = trim($__env->yieldContent('og_image')) ?: asset('brand/og-image.png');
+    $ogImageAlt = trim($__env->yieldContent('og_image_alt')) ?: 'RuddatTech – Komplexe Software. Zuverlässig betreut.';
+    $robots = trim($__env->yieldContent('robots')) ?: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 @endphp
 <!DOCTYPE html>
 <html lang="de">
@@ -12,24 +15,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
-    <meta name="robots" content="@yield('robots', 'index, follow')">
+    <meta name="robots" content="{{ $robots }}">
     <link rel="canonical" href="{{ $canonical }}">
+    <link rel="alternate" hreflang="de" href="{{ $canonical }}">
+    <meta name="author" content="RuddatTech – Ingo Ruddat">
     <meta name="theme-color" content="#0B1426">
 
+    {{-- Open Graph / Social Preview --}}
     <meta property="og:locale" content="de_DE">
     <meta property="og:site_name" content="RuddatTech">
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDescription }}">
     <meta property="og:url" content="{{ $canonical }}">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="{{ $ogImage }}">
+    @if ($ogImage === asset('brand/og-image.png'))
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:type" content="image/png">
+    @endif
+    <meta property="og:image:alt" content="{{ $ogImageAlt }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $pageDescription }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
+    <meta name="twitter:image:alt" content="{{ $ogImageAlt }}">
 
-    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
-    <link rel="apple-touch-icon" href="{{ asset('assets/img/apple-touch-icon.png') }}">
+    {{-- Icons --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="32x32">
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+
+    {{-- Maschinenlesbare Kurzbeschreibung für KI-Assistenten --}}
+    <link rel="alternate" type="text/markdown" title="RuddatTech für KI-Assistenten" href="{{ route('llms') }}">
 
     @vite(['resources/css/site.css', 'resources/js/site.js'])
 
     @stack('head')
+
+    {{-- Organisation und Webseite – auf allen Seiten, von Einzelseiten per @id referenziert --}}
+    <script type="application/ld+json">
+        {!! json_encode(\App\Support\Site\StructuredData::siteGraph(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
+    </script>
     @stack('structured_data')
 </head>
 

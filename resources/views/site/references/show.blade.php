@@ -3,6 +3,10 @@
 @section('title', $reference->seo_title ?: $reference->title . ' – Referenz | RuddatTech')
 @section('meta_description', $reference->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($reference->summary ?: $reference->description), 160))
 @section('og_type', 'article')
+@if ($reference->cover_url)
+    @section('og_image', url($reference->cover_url))
+    @section('og_image_alt', $reference->cover_alt ?: $reference->title)
+@endif
 
 @push('structured_data')
     <script type="application/ld+json">
@@ -16,7 +20,9 @@
                     'url' => route('referenzen.show', $reference),
                     'image' => $reference->cover_url ? url($reference->cover_url) : null,
                     'keywords' => implode(', ', $reference->badges ?? []),
-                    'creator' => ['@type' => 'ProfessionalService', 'name' => 'RuddatTech', 'url' => route('home')],
+                    'creator' => ['@id' => \App\Support\Site\StructuredData::organizationId()],
+                    'about' => array_values($reference->complexityLabels()),
+                    'inLanguage' => 'de-DE',
                 ],
                 [
                     '@type' => 'BreadcrumbList',

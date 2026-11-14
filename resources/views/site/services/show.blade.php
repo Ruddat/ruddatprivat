@@ -14,7 +14,7 @@
                     'serviceType' => $service['label'],
                     'description' => $service['meta_description'],
                     'url' => route('leistungen.show', $service['slug']),
-                    'provider' => ['@type' => 'ProfessionalService', 'name' => 'RuddatTech', 'url' => route('home')],
+                    'provider' => ['@id' => \App\Support\Site\StructuredData::organizationId()],
                     'areaServed' => ['@type' => 'Country', 'name' => 'Deutschland'],
                 ],
                 [
