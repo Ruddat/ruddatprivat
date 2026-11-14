@@ -8,9 +8,8 @@ Interne Dokumente zu Vertrieb/Akquise wurden **nicht** als Quelle verwendet.
 
 | Punkt | Warum |
 |---|---|
-| **Projektstatus** aller vier Einträge | Aus der Doku abgeleitet; ob ein System bereits produktiv genutzt wird, ist im Code nicht eindeutig. |
-| **Rolle von RuddatTech** | Formuliert als Eigenprojekt (Konzeption, Architektur, Entwicklung). |
-| Kein Merkmal **„Betrieb produktiver Anwendungen“** gesetzt | Erst zuordnen, wenn der Livebetrieb bestätigt ist. |
+| **Produktivbetrieb** (vom Inhaber bestätigt, 14.11.2026) | JustDeliver Legacy: seit ca. 16 Jahren produktiv, PHP-8-Version live seit Ende Oktober 2026. JustDeliver 4 / Foodzwerge: produktiv seit Juni 2026. Kalle-Marken: online unter eigenen .de-Domains. Merkmal „Betrieb produktiver Anwendungen“ entsprechend gesetzt. **Umsatz- und Provisionsangaben werden bewusst nicht veröffentlicht.** |
+| **Status** BelegKalle, ZwergiJump, Fristenfrei, Zwergi, RäumExpress | Weiterhin aus Code/Doku abgeleitet – bitte bestätigen. |
 | Screenshot **Legacy-Startseite** | Zeigt einen echten Restaurantnamen mit Gericht und Preis aus dem Datenbestand. Ggf. ersetzen. |
 | Screenshot **Stadtschrei** | Nachrichtenticker abgeschnitten; Veranstaltungs- und Wetter-Screenshots verworfen (fremde Inhalte bzw. leere Daten). |
 | **Veröffentlichungsrechte** ZwergiJump, Fristenfrei, Zwergi Chat/Help, RäumExpress | Als Eigenprojekte angenommen – bitte bestätigen. |
@@ -30,6 +29,10 @@ Interne Dokumente zu Vertrieb/Akquise wurden **nicht** als Quelle verwendet.
 | Capacitor-App (Android) | `capacitor.config.ts`, `android/` |
 | Manager-/Anbieterbereiche mit Berechtigungen | README, Gates/Policies in `app/` |
 | Laravel 13, PHP 8.3 | `composer.json` |
+| Kalle-Marken FragKalle, LieferKalle, RegioKalle, StadtKalle, TischKalle, KioskKalle | Domains `*kalle.de` in `app/` und `database/seeders`, Partner-Controller je Marke |
+| RetterKalle, Hof-Cockpit (RegioKalle), Kleinanzeigen (StadtKalle) | `docs/retterkalle-status.md`, `docs/regiokalle-status.md`, `docs/STADTKALLE-STATUS.md` |
+| Kein eigenes Shopsystem, Backends JD4 und ZwergiJump | README (Architekturprinzip), ZwergiJump-API `api/v1/integrations/lieferwiki/*` |
+| **Nicht** aufgenommen: Kalle Voice | laut `docs/KALLE-VOICE-START.md` im Konzeptstadium |
 
 ## JustDeliver 4 (`justdeliver4`)
 
@@ -44,6 +47,8 @@ Interne Dokumente zu Vertrieb/Akquise wurden **nicht** als Quelle verwendet.
 | Abrechnungen wöchentlich/monatlich, Export, GoBD | `settlements:*`, `GenerateGobdExportJob` |
 | Kassenübergabe, KI-Bilder, Treueprogramm, Kampagnen, Bewertungsprüfung | Jobs `DispatchPosOrder`, `GenerateProductAiImageJob`, `LoyaltyRewardJob`, `SendMarketingCampaignRecipient`, `CheckReviewTextJob` |
 | Laravel 12, Livewire 3 | `composer.json` |
+| Commerce-Engine mit Shopify-Katalogimport | `app/Services/Commerce/CommerceManager.php`, `Commerce/Shopify/ShopifyConnector.php`, `ShopifyCatalogImporter.php`, `shopify:sync-catalog` im Scheduler |
+| Versionierte Portal-API | `routes/api.php` (`v1/portal`), `PortalApiServiceProvider` |
 
 ## Übernahme & Modernisierung (`justdeliver-legacy-repo`)
 
