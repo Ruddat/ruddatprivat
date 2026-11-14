@@ -129,7 +129,9 @@ function initLightbox() {
         img.alt = thumb?.alt ?? '';
         caption.textContent = link.dataset.caption ?? '';
         counter.textContent = links.length > 1 ? `Bild ${index + 1} von ${links.length}` : '';
-        prev.hidden = next.hidden = links.length < 2;
+        // Klasse statt hidden-Attribut: inline-flex würde das Attribut überschreiben
+        prev.classList.toggle('hidden', links.length < 2);
+        next.classList.toggle('hidden', links.length < 2);
     };
 
     links.forEach((link, i) => {
