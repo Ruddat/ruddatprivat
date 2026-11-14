@@ -50,14 +50,25 @@
                     ProjectHub
                 </a>
 
-                <a href="{{ route('admin.portfolio.editor') }}"
-                    class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
-                    Portfolio Editor
+                @php
+                    $newInquiries = \App\Models\Inquiry::where('status', 'new')->count();
+                @endphp
+                <a href="{{ route('admin.inquiries.index') }}"
+                    class="flex items-center justify-between px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
+                    Anfragen
+                    @if ($newInquiries > 0)
+                        <span class="rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white" title="Neue Anfragen">{{ $newInquiries }}</span>
+                    @endif
                 </a>
 
-                <a href="{{ route('portfolio') }}" target="_blank"
+                <a href="{{ route('admin.portfolio.editor') }}"
                     class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
-                    Portfolio ansehen
+                    Referenzen verwalten
+                </a>
+
+                <a href="{{ route('referenzen.index') }}" target="_blank"
+                    class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
+                    Referenzen ansehen
                 </a>
 
                 <a href="{{ route('admin.customers.feedback') }}"

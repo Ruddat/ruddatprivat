@@ -138,6 +138,7 @@ class SiteContent
         return [
             'softwarewartung' => [
                 'label' => 'Application Maintenance',
+                'inquiry_type' => 'maintenance',
                 'title' => 'Professionelle Softwarewartung',
                 'icon' => 'wrench',
                 'card_text' => 'Regelmäßige technische Wartung, Prüfung von Abhängigkeiten, Updates und nachhaltige Stabilisierung.',
@@ -172,6 +173,7 @@ class SiteContent
             ],
             'managed-application-services' => [
                 'label' => 'Managed Application Services',
+                'inquiry_type' => 'managed_services',
                 'title' => 'Managed Application Services',
                 'icon' => 'server',
                 'card_text' => 'Ganzheitliche technische Betreuung inklusive Server, Datenbanken, Backups, Deployment und Monitoring gemäß vereinbartem Leistungsumfang.',
@@ -206,6 +208,7 @@ class SiteContent
             ],
             'uebernahme-bestehender-software' => [
                 'label' => 'Application Takeover',
+                'inquiry_type' => 'takeover',
                 'title' => 'Technische Übernahme bestehender Anwendungen',
                 'icon' => 'handover',
                 'card_text' => 'Strukturierte Übernahme bestehender Software, auch wenn der ursprüngliche Entwickler oder Dienstleister nicht mehr verfügbar ist.',
@@ -240,6 +243,7 @@ class SiteContent
             ],
             'fehleranalyse-stabilisierung' => [
                 'label' => 'Incident & Recovery',
+                'inquiry_type' => 'incident',
                 'title' => 'Fehleranalyse und Stabilisierung',
                 'icon' => 'lifebuoy',
                 'card_text' => 'Technische Fehleranalyse, Störungsbehebung und Wiederherstellung geschäftlicher Anwendungen.',

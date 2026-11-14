@@ -14,7 +14,7 @@
                 </p>
             </div>
             <div class="relative mt-8 shrink-0 lg:mt-0">
-                <a href="{{ route('kontakt') }}" class="btn-primary">
+                <a href="{{ $href ?? route('kontakt') }}" class="btn-primary">
                     {{ $button ?? 'Betreuung anfragen' }}
                     @include('site.partials.icon', ['name' => 'arrow-right', 'class' => 'h-4 w-4'])
                 </a>

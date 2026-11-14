@@ -137,5 +137,5 @@
         </div>
     </section>
 
-    @include('site.partials.cta')
+    @include('site.partials.cta', ['href' => route('kontakt', ['anfrage' => $service['inquiry_type']])])
 @endsection

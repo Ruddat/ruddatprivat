@@ -3,6 +3,7 @@
     <a href="{{ route('referenzen.show', $reference) }}" class="block aspect-[16/10] overflow-hidden bg-slate-100" tabindex="-1" aria-hidden="true">
         @if ($reference->cover_url)
             <img src="{{ $reference->cover_url }}" alt="" loading="lazy" decoding="async"
+                @if ($reference->cover_srcset) srcset="{{ $reference->cover_srcset }}" sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw" @endif
                 class="h-full w-full object-cover object-top transition duration-500 group-hover:scale-[1.02]">
         @else
             <div class="flex h-full w-full items-center justify-center bg-navy-900 text-brass-300">

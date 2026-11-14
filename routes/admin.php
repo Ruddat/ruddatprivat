@@ -27,6 +27,12 @@ Route::get('/projecthub/{board}', BoardShow::class)
 Route::get('/portfolio/editor', PortfolioEditor::class)
     ->name('portfolio.editor');
 
+Route::get('/anfragen', \App\Livewire\Backend\Admin\Inquiries\InquiryIndex::class)
+    ->name('inquiries.index');
+
+Route::get('/anfragen/{inquiry}', \App\Livewire\Backend\Admin\Inquiries\InquiryShow::class)
+    ->name('inquiries.show');
+
 Route::get('/customers', \App\Livewire\Backend\Admin\Customer\CustomersTable::class)
     ->name('customers.index');
 

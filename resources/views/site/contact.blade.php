@@ -46,23 +46,7 @@
             </aside>
 
             <div class="rounded-lg border border-slate-200 p-6 sm:p-10">
-                {{-- Das neue Anfrageformular (Speicherung, Statusverwaltung, Benachrichtigungen)
-                     wird in Phase 4/5 als Livewire-Komponente hier eingebunden. --}}
-                @if (View::exists('site.contact.form'))
-                    @include('site.contact.form')
-                @else
-                    <h2 class="text-xl font-semibold text-navy-900">Anfrage per E-Mail</h2>
-                    <p class="mt-3 leading-7 text-anthracite-700">
-                        Schreiben Sie mir bitte an
-                        <a class="font-semibold text-navy-900 underline decoration-brass-400 underline-offset-4"
-                            href="mailto:{{ \App\Support\Site\SiteContent::CONTACT_EMAIL }}?subject={{ rawurlencode('Anfrage technische Betreuung') }}">{{ \App\Support\Site\SiteContent::CONTACT_EMAIL }}</a>.
-                    </p>
-                    @env('local')
-                        <p class="mt-6 rounded-md border border-dashed border-slate-300 p-4 text-sm text-slate-500">
-                            Entwicklungshinweis: Hier wird in Phase 4 das neue Anfrageformular eingebunden.
-                        </p>
-                    @endenv
-                @endif
+                <livewire:site.inquiry-form :preset="is_string(request()->query('anfrage')) ? request()->query('anfrage') : null" />
             </div>
         </div>
     </section>

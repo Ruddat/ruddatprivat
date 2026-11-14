@@ -105,8 +105,78 @@ function initReveal() {
     });
 }
 
+function initLightbox() {
+    const dialog = document.getElementById('lightbox');
+    const links = Array.from(document.querySelectorAll('[data-gallery-item]'));
+
+    if (!dialog || !links.length || typeof dialog.showModal !== 'function') {
+        return; // ohne <dialog>-Unterstützung öffnet der Link einfach das Bild
+    }
+
+    const img = dialog.querySelector('[data-lightbox-image]');
+    const caption = dialog.querySelector('[data-lightbox-caption]');
+    const counter = dialog.querySelector('[data-lightbox-counter]');
+    const prev = dialog.querySelector('[data-lightbox-prev]');
+    const next = dialog.querySelector('[data-lightbox-next]');
+    let index = 0;
+    let opener = null;
+
+    const show = (i) => {
+        index = (i + links.length) % links.length;
+        const link = links[index];
+        const thumb = link.querySelector('img');
+        img.src = link.getAttribute('href');
+        img.alt = thumb?.alt ?? '';
+        caption.textContent = link.dataset.caption ?? '';
+        counter.textContent = links.length > 1 ? `Bild ${index + 1} von ${links.length}` : '';
+        prev.hidden = next.hidden = links.length < 2;
+    };
+
+    links.forEach((link, i) => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            opener = link;
+            show(i);
+            dialog.showModal();
+            document.documentElement.classList.add('overflow-hidden');
+        });
+    });
+
+    prev.addEventListener('click', () => show(index - 1));
+    next.addEventListener('click', () => show(index + 1));
+    dialog.querySelector('[data-lightbox-close]').addEventListener('click', () => dialog.close());
+
+    dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) {
+            dialog.close(); // Klick auf den Hintergrund
+        }
+    });
+
+    dialog.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') show(index - 1);
+        if (event.key === 'ArrowRight') show(index + 1);
+    });
+
+    // Wischgesten auf Mobilgeräten
+    let startX = null;
+    img.addEventListener('touchstart', (e) => (startX = e.touches[0].clientX), { passive: true });
+    img.addEventListener('touchend', (e) => {
+        if (startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+        startX = null;
+    });
+
+    dialog.addEventListener('close', () => {
+        document.documentElement.classList.remove('overflow-hidden');
+        img.src = '';
+        opener?.focus();
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initMobileNav();
     initHeaderState();
     initReveal();
+    initLightbox();
 });
