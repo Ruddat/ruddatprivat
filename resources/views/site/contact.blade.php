@@ -17,7 +17,7 @@
                 <div>
                     <h2 class="text-lg font-semibold text-navy-900">Direkter Kontakt</h2>
                     <a href="mailto:{{ \App\Support\Site\SiteContent::CONTACT_EMAIL }}"
-                        class="mt-4 inline-flex items-center gap-3 text-anthracite-800 hover:text-brass-600">
+                        class="mt-4 inline-flex items-center gap-3 text-anthracite-800 hover:text-brass-700">
                         <span class="icon-tile h-10 w-10">@include('site.partials.icon', ['name' => 'mail', 'class' => 'h-4 w-4'])</span>
                         {{ \App\Support\Site\SiteContent::CONTACT_EMAIL }}
                     </a>

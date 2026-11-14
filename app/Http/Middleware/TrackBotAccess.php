@@ -22,24 +22,21 @@ class TrackBotAccess
             'Plesk screenshot bot',
         ]);
 
-        // User-Agent-Header abfragen
-        $userAgent = $request->header('User-Agent');
-        Log::info("User-Agent: {$userAgent}");
-
-        // Jenssegers Agent initialisieren
-        $agent = new Agent;
-        $agent->setUserAgent($userAgent);
-
-        // Gerätedetails extrahieren
-        $device = $agent->device();
-        $platform = $agent->platform();
-        $platformVersion = $agent->version($platform);
-        $browser = $agent->browser();
-        $browserVersion = $agent->version($browser);
+        // User-Agent-Header abfragen (kein Log pro Aufruf mehr: füllte das Log und speicherte Besucherdaten)
+        $userAgent = (string) $request->header('User-Agent', '');
 
         // Prüfen, ob der User-Agent einem bekannten Bot entspricht
         foreach ($trackedBots as $botName) {
-            if (stripos($userAgent, $botName) !== false) {
+            if ($userAgent !== '' && stripos($userAgent, $botName) !== false) {
+                // Gerätedetails nur bei erkannten Bots auswerten (spart Rechenzeit bei normalen Besuchen)
+                $agent = new Agent;
+                $agent->setUserAgent($userAgent);
+                $device = $agent->device();
+                $platform = $agent->platform();
+                $platformVersion = $agent->version($platform);
+                $browser = $agent->browser();
+                $browserVersion = $agent->version($browser);
+
                 BotAccessLog::create([
                     'bot_name' => $botName,
                     'user_agent' => $userAgent, // Ganzes User-Agent speichern

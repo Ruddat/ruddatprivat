@@ -111,7 +111,7 @@
                     <details class="group py-5">
                         <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-navy-900 [&::-webkit-details-marker]:hidden">
                             {{ $faq['q'] }}
-                            <span class="text-brass-600 transition group-open:rotate-45" aria-hidden="true">
+                            <span class="text-brass-700 transition group-open:rotate-45" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
                             </span>
                         </summary>
@@ -130,7 +130,7 @@
                 @foreach ($otherServices as $slug => $other)
                     <a href="{{ route('leistungen.show', $slug) }}" class="card card-hover group flex items-center justify-between gap-4 p-5">
                         <span class="font-semibold text-navy-900">{{ $other['title'] }}</span>
-                        @include('site.partials.icon', ['name' => 'arrow-right', 'class' => 'h-4 w-4 shrink-0 text-brass-600'])
+                        @include('site.partials.icon', ['name' => 'arrow-right', 'class' => 'h-4 w-4 shrink-0 text-brass-700'])
                     </a>
                 @endforeach
             </div>

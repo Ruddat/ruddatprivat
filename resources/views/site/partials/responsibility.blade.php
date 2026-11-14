@@ -12,7 +12,7 @@
         <div class="mt-12 grid gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200 md:grid-cols-3">
             @foreach (\App\Support\Site\SiteContent::responsibilityLevels() as $level)
                 <div class="bg-white p-7">
-                    <span class="text-sm font-semibold text-brass-600">0{{ $loop->iteration }}</span>
+                    <span class="text-sm font-semibold text-brass-700">0{{ $loop->iteration }}</span>
                     <h3 class="mt-3 text-lg font-semibold text-navy-900">{{ $level['title'] }}</h3>
                     <p class="mt-3 text-[0.95rem] leading-7 text-anthracite-700">{{ $level['text'] }}</p>
                 </div>
@@ -20,7 +20,7 @@
         </div>
 
         <p class="mt-8 flex items-start gap-3 text-sm font-medium text-navy-900">
-            @include('site.partials.icon', ['name' => 'document', 'class' => 'mt-0.5 h-5 w-5 shrink-0 text-brass-600'])
+            @include('site.partials.icon', ['name' => 'document', 'class' => 'mt-0.5 h-5 w-5 shrink-0 text-brass-700'])
             {{ \App\Support\Site\SiteContent::CONTRACT_NOTE }}
         </p>
     </div>

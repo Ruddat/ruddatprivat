@@ -40,9 +40,7 @@ class SitemapController extends Controller
 
         LandingPage::where('published', true)->get(['slug', 'updated_at'])
             ->each(fn ($page) => $add(url('/lp/' . $page->slug), 'monthly', '0.5', $page->updated_at));
-
-        $add(route('impressum'), 'yearly', '0.2');
-        $add(route('datenschutz'), 'yearly', '0.2');
+        // Impressum, Datenschutz und AGB sind noindex und daher nicht in der Sitemap
 
         return response()
             ->view('sitemap.index', ['urls' => $urls])

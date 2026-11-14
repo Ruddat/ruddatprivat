@@ -1,7 +1,8 @@
 @extends("frontend.layouts.app")
 
 @section("title", $page->title)
-@section("meta_description", $page->meta_description)
+{{-- ?? '': bei null würde @section einen offenen Ausgabepuffer starten --}}
+@section("meta_description", $page->meta_description ?? '')
 
 @section("content")
     {{-- Hero --}}

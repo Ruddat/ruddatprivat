@@ -40,7 +40,7 @@
     }
 
     .eyebrow {
-        @apply text-xs font-semibold uppercase tracking-[0.22em] text-brass-600;
+        @apply text-xs font-semibold uppercase tracking-[0.22em] text-brass-700;
     }
 
     .eyebrow-dark {

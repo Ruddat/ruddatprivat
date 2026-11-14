@@ -24,9 +24,9 @@ Route::get('/intake-form', [CompleteIntakeController::class, 'index'])
 
 Route::get('/schedule-meeting', SchedulingFormComponent::class);
 
-Route::view('/impressum', 'frontend.home.sections.imprint')->name('impressum');
-Route::view('/agb', 'frontend.home.sections.agb')->name('agb');
-Route::view('/datenschutz', 'frontend.home.sections.privacy')->name('datenschutz');
+Route::view('/impressum', 'site.legal.imprint')->name('impressum');
+Route::view('/agb', 'site.legal.terms')->name('agb');
+Route::view('/datenschutz', 'site.legal.privacy')->name('datenschutz');
 // RuddatTech – neue Seitenstruktur
 Route::get('/leistungen', [ServiceController::class, 'index'])->name('leistungen.index');
 Route::get('/leistungen/{slug}', [ServiceController::class, 'show'])
@@ -66,3 +66,6 @@ Route::get('/lp/{slug}', [LandingPageController::class, 'show'])
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])
     ->name('sitemap');
+
+// Ersetzt die statische public/robots.txt (Sitemap-URL je Umgebung)
+Route::get('/robots.txt', \App\Http\Controllers\RobotsController::class)->name('robots');

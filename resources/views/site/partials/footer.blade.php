@@ -19,7 +19,7 @@
             </div>
 
             <div>
-                <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Leistungen</h2>
+                <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Leistungen</h2>
                 <ul class="mt-5 space-y-3 text-sm">
                     @foreach ($services as $slug => $service)
                         <li><a class="transition hover:text-white" href="{{ route('leistungen.show', $slug) }}">{{ $service['title'] }}</a></li>
@@ -28,7 +28,7 @@
             </div>
 
             <div>
-                <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">RuddatTech</h2>
+                <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">RuddatTech</h2>
                 <ul class="mt-5 space-y-3 text-sm">
                     <li><a class="transition hover:text-white" href="{{ route('referenzen.index') }}">Referenzen</a></li>
                     <li><a class="transition hover:text-white" href="{{ route('about') }}">Über RuddatTech</a></li>
@@ -37,7 +37,7 @@
             </div>
 
             <div>
-                <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Rechtliches</h2>
+                <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Rechtliches</h2>
                 <ul class="mt-5 space-y-3 text-sm">
                     <li><a class="transition hover:text-white" href="{{ route('impressum') }}">Impressum</a></li>
                     <li><a class="transition hover:text-white" href="{{ route('datenschutz') }}">Datenschutz</a></li>
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-8 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-8 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <p>© {{ date('Y') }} RuddatTech · Ingo Ruddat</p>
             <p>{{ \App\Support\Site\SiteContent::CONTRACT_NOTE }}</p>
         </div>

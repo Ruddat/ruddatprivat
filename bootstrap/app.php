@@ -59,6 +59,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->append(TrackBotAccess::class);
+        // Global statt in der web-Gruppe, damit auch 404-Antworten die Header erhalten
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

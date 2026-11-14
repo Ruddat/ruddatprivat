@@ -103,13 +103,13 @@
                     <a href="{{ route('leistungen.show', $slug) }}" class="card card-hover group flex flex-col" data-reveal>
                         <div class="flex items-start justify-between gap-4">
                             <span class="icon-tile">@include('site.partials.icon', ['name' => $service['icon'], 'class' => 'h-5 w-5'])</span>
-                            <span class="text-xs font-medium uppercase tracking-[0.16em] text-slate-400">{{ $service['label'] }}</span>
+                            <span class="text-xs font-medium uppercase tracking-[0.16em] text-slate-500">{{ $service['label'] }}</span>
                         </div>
                         <h3 class="mt-6 text-xl font-semibold text-navy-900">{{ $service['title'] }}</h3>
                         <p class="mt-3 flex-1 leading-7 text-anthracite-700">{{ $service['card_text'] }}</p>
                         <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-navy-900">
                             Mehr erfahren
-                            <span class="transition group-hover:translate-x-1">@include('site.partials.icon', ['name' => 'arrow-right', 'class' => 'h-4 w-4 text-brass-600'])</span>
+                            <span class="transition group-hover:translate-x-1">@include('site.partials.icon', ['name' => 'arrow-right', 'class' => 'h-4 w-4 text-brass-700'])</span>
                         </span>
                     </a>
                 @endforeach
@@ -185,7 +185,7 @@
             <ol class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
                 @foreach (\App\Support\Site\SiteContent::process() as $step)
                     <li class="relative border-t-2 border-navy-900 pt-6" data-reveal>
-                        <span class="text-sm font-semibold text-brass-600">Schritt {{ $loop->iteration }}</span>
+                        <span class="text-sm font-semibold text-brass-700">Schritt {{ $loop->iteration }}</span>
                         <h3 class="mt-2 text-base font-semibold leading-6 text-navy-900">{{ $step['title'] }}</h3>
                         <p class="mt-3 text-sm leading-6 text-anthracite-700">{{ $step['text'] }}</p>
                     </li>

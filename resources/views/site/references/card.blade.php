@@ -13,7 +13,7 @@
     </a>
     <div class="flex flex-1 flex-col p-6">
         @if ($reference->category)
-            <p class="text-xs font-medium uppercase tracking-[0.16em] text-brass-600">{{ $reference->category }}</p>
+            <p class="text-xs font-medium uppercase tracking-[0.16em] text-brass-700">{{ $reference->category }}</p>
         @endif
         <h3 class="mt-2 text-lg font-semibold text-navy-900">
             <a href="{{ route('referenzen.show', $reference) }}" class="after:absolute after:inset-0 focus:outline-none">{{ $reference->title }}</a>
@@ -23,7 +23,7 @@
         @endif
         <span class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-navy-900">
             Fallstudie ansehen
-            @include('site.partials.icon', ['name' => 'arrow-right', 'class' => 'h-4 w-4 text-brass-600'])
+            @include('site.partials.icon', ['name' => 'arrow-right', 'class' => 'h-4 w-4 text-brass-700'])
         </span>
     </div>
 </article>

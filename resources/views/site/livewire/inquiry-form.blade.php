@@ -8,7 +8,7 @@
     @if ($submitted)
         <div class="scroll-mt-28 py-6 text-center outline-none" role="status" aria-live="polite" tabindex="-1"
             x-data x-init="$el.scrollIntoView({ block: 'center', behavior: 'smooth' }); $el.focus({ preventScroll: true })">
-            <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brass-50 text-brass-600 ring-1 ring-brass-200">
+            <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brass-50 text-brass-700 ring-1 ring-brass-200">
                 @include('site.partials.icon', ['name' => 'check', 'class' => 'h-7 w-7'])
             </span>
             <h2 class="mt-6 text-2xl font-semibold text-navy-900">Vielen Dank für Ihre Anfrage.</h2>
