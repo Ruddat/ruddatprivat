@@ -23,6 +23,17 @@
                     </a>
                 </div>
 
+                @if (strlen(preg_replace('/\D/', '', (string) config('inquiry-alerts.whatsapp_button_number'))) >= 8)
+                    <div class="rounded-lg border border-slate-200 p-6">
+                        <h2 class="text-base font-semibold text-navy-900">Per WhatsApp</h2>
+                        <p class="mt-2 text-[0.95rem] leading-7 text-anthracite-700">
+                            Über den grünen Button können Sie direkt einen WhatsApp-Chat öffnen. Bitte beachten Sie:
+                            Solche Nachrichten laufen über WhatsApp (Meta) und werden nicht im Anfragesystem erfasst.
+                            Für eine dokumentierte Anfrage nutzen Sie bitte das Formular.
+                        </p>
+                    </div>
+                @endif
+
                 <div class="rounded-lg border border-slate-200 bg-slate-50 p-6">
                     <h2 class="text-base font-semibold text-navy-900">Hilfreiche Angaben</h2>
                     <ul class="check-list mt-4 space-y-3 text-[0.95rem] leading-7 text-anthracite-700">

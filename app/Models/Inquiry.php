@@ -47,6 +47,11 @@ class Inquiry extends Model
         return hash('sha256', $normalize($email) . '|' . $normalize($summary) . '|' . $normalize($requirements));
     }
 
+    public function alerts()
+    {
+        return $this->hasMany(InquiryAlert::class)->latest('id');
+    }
+
     public function changeStatus(InquiryStatus $status): void
     {
         if ($this->status === $status) {

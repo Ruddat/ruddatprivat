@@ -90,9 +90,27 @@
                 </dl>
             </section>
 
-            <section class="rounded-xl border border-dashed border-slate-300 p-6 text-sm text-slate-500 dark:border-gray-600">
-                <h2 class="text-sm font-semibold uppercase tracking-wide">Benachrichtigungen</h2>
-                <p class="mt-2">Der Versandstatus von E-Mail, SMS und Telegram wird hier angezeigt, sobald die Benachrichtigungen (Phase 5) angebunden sind.</p>
+            <section class="rounded-xl border border-slate-200 bg-white p-6 text-sm dark:border-gray-700 dark:bg-gray-800" wire:poll.15s>
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500">Benachrichtigungen</h2>
+                    <a href="{{ route('admin.inquiry-alerts.settings') }}" class="text-xs text-slate-500 hover:underline">Einstellungen</a>
+                </div>
+                <ul class="mt-4 space-y-3">
+                    @forelse ($inquiry->alerts()->get() as $alert)
+                        <li class="flex items-start justify-between gap-3">
+                            <span>
+                                {{ \App\Models\InquiryAlert::channelLabel($alert->channel) }}
+                                @if ($alert->is_fallback)<span class="text-xs text-slate-500">(Fallback)</span>@endif
+                                <span class="block text-xs text-slate-500">{{ $alert->recipient_masked }} · {{ $alert->attempts }} Versuch(e)</span>
+                                @if ($alert->last_error)<span class="block text-xs text-red-700">{{ $alert->last_error }}</span>@endif
+                            </span>
+                            <span class="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 {{ $alert->statusClasses() }}">{{ $alert->statusLabel() }}</span>
+                        </li>
+                    @empty
+                        <li class="text-slate-500">Keine Benachrichtigung angestoßen (kein Kanal aktiv).</li>
+                    @endforelse
+                </ul>
+                <p class="mt-4 text-xs text-slate-500">„Angenommen“ bestätigt nur die Übernahme durch den Anbieter, nicht das Lesen.</p>
             </section>
         </div>
     </div>

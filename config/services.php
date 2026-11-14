@@ -39,6 +39,15 @@ return [
         'bot_token' => env('TELEGRAM_BOT_TOKEN'),
     ],
 
+    'seven' => [
+        'api_key' => env('SEVEN_API_KEY'),
+        'endpoint' => env('SEVEN_ENDPOINT', 'https://gateway.seven.io/api/sms'),
+    ],
+
+    'whatsapp' => [
+        'token' => env('WHATSAPP_ACCESS_TOKEN'),
+    ],
+
     'ocrspace' => [
         'key' => env('OCR_SPACE_API_KEY'),
         'endpoint' => env('OCR_SPACE_ENDPOINT', 'https://api.ocr.space/parse/image'),

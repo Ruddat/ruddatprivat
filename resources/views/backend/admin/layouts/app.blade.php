@@ -61,6 +61,11 @@
                     @endif
                 </a>
 
+                <a href="{{ route('admin.inquiry-alerts.settings') }}"
+                    class="block px-4 py-2 pl-8 text-sm rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
+                    Benachrichtigungen
+                </a>
+
                 <a href="{{ route('admin.portfolio.editor') }}"
                     class="block px-4 py-2 rounded hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-gray-700">
                     Referenzen verwalten

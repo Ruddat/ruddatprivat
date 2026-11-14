@@ -47,6 +47,8 @@
 
     @include('site.partials.footer')
 
+    @include('site.partials.whatsapp-button')
+
     {{-- Kontakt-CTA auf Mobilgeräten immer erreichbar --}}
     @unless (request()->routeIs('kontakt'))
         <div class="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-navy-950/95 p-3 backdrop-blur lg:hidden"

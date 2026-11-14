@@ -35,8 +35,9 @@ class PhoneVerificationNotification extends Notification
     public function sendSms($phone)
     {
         return Http::withHeaders([
-            'X-Api-Key' => env('SEVEN_API_KEY'),
-        ])->post('https://gateway.seven.io/api/sms', [
+            // config() statt env(): env() liefert bei gecachter Konfiguration null
+            'X-Api-Key' => config('services.seven.api_key'),
+        ])->post(config('services.seven.endpoint'), [
             'to'   => $phone,
             'text' => "Dein RuddatTech Code lautet: {$this->code}",
             'from' => 'RuddatTech',

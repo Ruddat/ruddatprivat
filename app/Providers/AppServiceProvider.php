@@ -19,6 +19,14 @@ class AppServiceProvider extends ServiceProvider
             return new \App\Services\CustomerContext;
         });
 
+        // SMS-Anbieter austauschbar: INQUIRY_SMS_DRIVER=seven (echter Versand) oder log (Entwicklung)
+        $this->app->bind(\App\Services\InquiryAlerts\Contracts\SmsGateway::class, function () {
+            return match (config('inquiry-alerts.channels.sms.driver')) {
+                'seven' => new \App\Services\InquiryAlerts\Sms\SevenSmsGateway,
+                default => new \App\Services\InquiryAlerts\Sms\LogSmsGateway,
+            };
+        });
+
     }
 
     /**
