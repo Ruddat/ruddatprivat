@@ -1,0 +1,145 @@
+@config "../../tailwind.site.config.js";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-white font-sans text-anthracite-800 antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    :focus-visible {
+        @apply outline outline-2 outline-offset-2 outline-brass-400;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    .site-container {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.22em] text-brass-600;
+    }
+
+    .eyebrow-dark {
+        @apply text-xs font-semibold uppercase tracking-[0.22em] text-brass-300;
+    }
+
+    .section-title {
+        @apply mt-3 text-3xl font-semibold tracking-tight text-navy-900 sm:text-4xl;
+        text-wrap: balance;
+    }
+
+    .section-lead {
+        @apply mt-5 max-w-prose text-lg leading-8 text-anthracite-700;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-md bg-brass-400 px-6 py-3.5 text-sm font-semibold text-navy-950 shadow-sm transition duration-200 hover:bg-brass-300 focus-visible:outline-brass-200;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-md border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition duration-200 hover:border-white/40 hover:bg-white/5;
+    }
+
+    .btn-outline {
+        @apply inline-flex items-center justify-center gap-2 rounded-md border border-navy-900/15 px-6 py-3.5 text-sm font-semibold text-navy-900 transition duration-200 hover:border-navy-900/30 hover:bg-navy-900/[0.03];
+    }
+
+    .card {
+        @apply rounded-lg border border-slate-200 bg-white p-7 transition duration-200;
+    }
+
+    .card-hover {
+        @apply hover:-translate-y-0.5 hover:border-brass-300 hover:shadow-[0_12px_32px_-16px_rgba(11,20,38,0.25)];
+    }
+
+    .icon-tile {
+        @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-navy-900 text-brass-300;
+    }
+
+    .check-list > li {
+        @apply relative pl-7;
+    }
+
+    .check-list > li::before {
+        content: '';
+        @apply absolute left-1.5 top-[0.35em] h-3 w-1.5 rotate-45 border-b-2 border-r-2 border-brass-500;
+    }
+
+    .check-list-dark > li::before {
+        @apply border-brass-300;
+    }
+
+    /* Header */
+    [data-site-header] {
+        @apply transition-[background-color,box-shadow,border-color] duration-300;
+    }
+
+    [data-site-header].is-scrolled {
+        @apply border-white/10 bg-navy-950/95 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.5)];
+    }
+
+    /* Mobile Navigation */
+    #mobile-nav .mobile-nav-sheet {
+        @apply translate-y-[-8px] opacity-0 transition duration-200;
+    }
+
+    #mobile-nav.is-open .mobile-nav-sheet {
+        @apply translate-y-0 opacity-100;
+    }
+
+    /* Dezente Einblendung beim Scrollen */
+    .reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+    }
+
+    .prose-site {
+        @apply max-w-prose text-base leading-8 text-anthracite-700;
+    }
+
+    .prose-site h2 {
+        @apply mt-12 text-2xl font-semibold tracking-tight text-navy-900;
+    }
+
+    .prose-site p {
+        @apply mt-4;
+    }
+
+    .nav-link {
+        @apply whitespace-nowrap rounded-md px-2.5 py-2 text-sm font-medium text-slate-300 transition hover:text-white xl:px-3;
+    }
+
+    .nav-link[aria-current='page'] {
+        @apply text-white;
+    }
+}

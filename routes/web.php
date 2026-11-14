@@ -5,12 +5,12 @@ use App\Http\Controllers\Frontend\Appointment\AppointmentController;
 use App\Http\Controllers\Frontend\CompleteIntake\CompleteIntakeController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\LandingPageController;
-use App\Http\Controllers\Frontend\PortfolioController;
+use App\Http\Controllers\Frontend\ReferenceController;
+use App\Http\Controllers\Frontend\ServiceController;
 use App\Http\Controllers\SitemapController;
 use App\Livewire\Frontend\SchedulingForm\SchedulingFormComponent;
 use App\Livewire\Public\ProjectShareShow;
-use App\Notifications\TelegramNotification;
-use Illuminate\Support\Facades\Notification;
+use App\Support\Site\SiteContent;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -21,25 +21,27 @@ Route::get('/schedule-appointment', [AppointmentController::class, 'index'])
 Route::get('/intake-form', [CompleteIntakeController::class, 'index'])
     ->name('intake.form');
 
-Route::get('/send-telegram', function () {
-    $chatId = '6508551813';
-    $message = 'Dies ist eine Testnachricht von deinem Telegram-Bot!';
-
-    Notification::route('telegram', $chatId)
-        ->notify(new TelegramNotification($message, $chatId));
-
-    return 'Nachricht gesendet!';
-});
 
 Route::get('/schedule-meeting', SchedulingFormComponent::class);
 
 Route::view('/impressum', 'frontend.home.sections.imprint')->name('impressum');
 Route::view('/agb', 'frontend.home.sections.agb')->name('agb');
 Route::view('/datenschutz', 'frontend.home.sections.privacy')->name('datenschutz');
-Route::view('/portfolio', 'frontend.home.sections.portfolio')->name('portfolio');
+// RuddatTech – neue Seitenstruktur
+Route::get('/leistungen', [ServiceController::class, 'index'])->name('leistungen.index');
+Route::get('/leistungen/{slug}', [ServiceController::class, 'show'])
+    ->whereIn('slug', array_keys(SiteContent::services()))
+    ->name('leistungen.show');
 
-Route::get('/portfolio/{portfolioItem:slug}', [PortfolioController::class, 'show'])
-    ->name('portfolio.show');
+Route::get('/referenzen', [ReferenceController::class, 'index'])->name('referenzen.index');
+Route::get('/referenzen/{reference:slug}', [ReferenceController::class, 'show'])->name('referenzen.show');
+
+Route::view('/ueber-ruddattech', 'site.about')->name('about');
+Route::view('/kontakt', 'site.contact')->name('kontakt');
+
+// Alte Portfolio-URLs: alle bisherigen Einträge sind unveröffentlicht → 301 auf die Referenzübersicht
+Route::permanentRedirect('/portfolio', '/referenzen')->name('portfolio');
+Route::permanentRedirect('/portfolio/{slug}', '/referenzen')->name('portfolio.show');
 
 Route::get('/share/project/{token}', ProjectShareShow::class)
     ->name('project-share.show');
